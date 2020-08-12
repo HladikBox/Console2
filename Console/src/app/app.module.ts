@@ -9,13 +9,15 @@ import { APP_BASE_HREF } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { SettleComponent } from './settle/settle.component';
+import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    SettleComponent
+    SettleComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
