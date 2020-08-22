@@ -294,10 +294,17 @@ div{
   width: 96px;
   height: 96px;
 }
+.icon-5x{
+  width: 120px;
+  height: 120px;
+}
 
 
 .bg-w{
   background: #ffffff;;
+}
+.bg-g{
+  background: #ecf5fa;;
 }
 .f-w{
   color:white ;
@@ -305,10 +312,25 @@ div{
 .f-g{
   color:#c3c3c3 ;
 }
+.f-g2{
+  color:#819199 ;
+}
 .f-w.el-link{
   color:white !important;
 }
 .bg-trans{
   background: transparent;
+}
+.long-btn-1x{
+  width:100px;
+}
+.long-btn{
+  width:200px;
+}
+.long-btn-3x{
+  width:300px;
+}
+.long-btn-4x{
+  width:400px;
 }
 </style>
