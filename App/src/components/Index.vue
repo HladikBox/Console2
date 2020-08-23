@@ -21,32 +21,7 @@
       </el-carousel-item>
     </el-carousel>
     <div class="header">
-      <div class>
-        <div class="flex-row flex-center">
-          <div class="flex-1"></div>
-          <div class="container flex-row flex-center margin-top">
-            <div>
-              <img class="logo" :src="uploadpath+'resource/'+Res.logow" />
-            </div>
-            <div class="dot bg-w margin-left-1x margin-right-1x"></div>
-            <div class="f-w f16">{{Inst.name}}</div>
-            <div class="flex-1"></div>
-            <el-link :underline="false" class="padding-right f-w">主页</el-link>
-            <el-link :underline="false" class="padding-right f-w">管理中心</el-link>
-            <el-link :underline="false" class="padding-right f-w">文档中心</el-link>
-            <el-link :underline="false" class="padding-right f-w">产品定价</el-link>
-            <div>
-              <el-input prefix-icon="el-icon-search" placeholder="搜索" v-model="search"></el-input>
-            </div>
-            <div class="split bg-w margin-left margin-right"></div>
-            <el-link :underline="false" class="padding-right f-w">登录</el-link>
-            <div>
-              <el-button round size="medium" plain class="bg-trans f-w">注册</el-button>
-            </div>
-          </div>
-          <div class="flex-1"></div>
-        </div>
-      </div>
+      <MyHeader :havebg="false"></MyHeader>
     </div>
     <div class="section bg-w">
       <div class="w-100 h-100 flex-row flex-center">
@@ -343,22 +318,25 @@
         <div class="flex-1"></div>
       </div>
     </div>
-    <div class="section " :style="{backgroundImage: 'url('+ uploadpath+'resource/' + Res.bgfooter + ')', backgroundSize:'cover'}">
+    <div
+      class="section"
+      :style="{backgroundImage: 'url('+ uploadpath+'resource/' + Res.bgfooter + ')', backgroundSize:'cover'}"
+    >
       <div class="w-100 h-100 flex-row flex-center">
         <div class="flex-1"></div>
         <div class="container text-center">
-          <div class="h3 f-w ">成就行业先锋典范，从加入云易创开发者行列开始</div>
+          <div class="h3 f-w">成就行业先锋典范，从加入云易创开发者行列开始</div>
           <div>
-            <el-button  class="margin-top-4x long-btn" round>立即免费加入</el-button>
+            <el-button class="margin-top-4x long-btn" round>立即免费加入</el-button>
           </div>
         </div>
         <div class="flex-1"></div>
       </div>
     </div>
-    <div class="section footersec" >
+    <div class="section footersec">
       <div class="w-100 h-100 flex-row flex-center">
         <div class="flex-1"></div>
-        <div class="container flex-row ">
+        <div class="container flex-row">
           <div class="flex-1">
             <div class="bolder">联系我们</div>
             <div class="f-g margin-top-4x">商务接洽</div>
@@ -391,6 +369,8 @@ export default {
       s3select: 0,
       clientcase: [],
     };
+  },
+  methods: {
   },
   created() {
     PageHelper.Init(this);
@@ -473,10 +453,10 @@ export default {
 .clientcase:hover .clientqrcode {
   display: unset;
 }
-.h262{
+.h262 {
   height: 262px;
 }
-.footersec{
+.footersec {
   background: #f5f7fa;
 }
 </style>

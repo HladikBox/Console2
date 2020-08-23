@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      <router-view />
+      <router-view style="min-height:100vh" class="bg-g" />
   </div>
 </template>
 
@@ -19,7 +19,8 @@ export default {
 div{
 }
 .container{
-  width:940px;
+  min-width:940px;
+  max-width:940px;
 }
 
 .flex-row {
@@ -332,5 +333,15 @@ div{
 }
 .long-btn-4x{
   width:400px;
+}
+
+.bg-p{
+  background: #409EFF;
+}
+.bd{
+  border:1px solid #d7dae2;
+}
+.bd-bottom{
+  border-bottom:1px solid #d7dae2;
 }
 </style>

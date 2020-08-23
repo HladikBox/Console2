@@ -5,8 +5,10 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
+import Header from './components/Header'
 
 Vue.use(ElementUI)
+Vue.component('MyHeader', Header);
 
 Vue.config.productionTip = false
 

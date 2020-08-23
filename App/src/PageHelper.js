@@ -22,7 +22,14 @@ export class PageHelper{
         }else{
             page.Inst=PageHelper.Inst;
         }
+        console.log("pageinfo",page);
 
-
+        page.home=function(event) {
+          page.$router.push({ path: "/" });
+        };
+        page.routeto=function (path, param = {}) {
+            page.$router.push({ path, param });
+        }
+        
     }
 }
