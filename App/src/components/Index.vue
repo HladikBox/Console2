@@ -338,7 +338,7 @@
         <div class="flex-1"></div>
         <div class="container flex-row">
           <div class="flex-1">
-            <div class="bolder">联系我们</div>
+            <div class="bolder" >联系我们</div>
             <div class="f-g margin-top-4x">商务接洽</div>
             <div class="f-g margin-top-1x">{{Inst.businesscontact}}</div>
             <div class="f-g margin-top-1x">{{Inst.customerservicemobile}}</div>
@@ -367,7 +367,7 @@ export default {
       indexbanner: [],
       s2select: 0,
       s3select: 0,
-      clientcase: [],
+      clientcase: []
     };
   },
   methods: {

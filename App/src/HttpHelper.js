@@ -8,11 +8,12 @@ export class HttpHelper {
   static Unicode = "yyc";
   static Post(url, data) {
     var fullurl = Config.ApiUrl + url;
+    var token=window.localStorage.getItem("token");
     return Axios.post(fullurl,HttpHelper.ParamUrlencoded(data), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Sign': HttpHelper.Sign,
-        'Token': HttpHelper.Token,
+        'Token': token,
         'TokenKey': HttpHelper.TokenKey,
         'UNICODE': HttpHelper.Unicode
       }

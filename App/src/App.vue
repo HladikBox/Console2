@@ -1,12 +1,59 @@
 <template>
   <div id="app">
       <router-view style="min-height:100vh" class="bg-g" />
+      <el-dialog
+        title="开发者账号登录"
+        :visible.sync="loginBoxShow"
+        width="30%"
+        >
+        <div>
+          <el-input
+                v-model="mobile"
+                maxlength="11"
+                autofocus
+                size="large"
+                type="tel"
+                placeholder="请输入手机号"
+              ></el-input>
+        </div>
+        <div class="margin-top">
+          <el-input
+                v-model="password"
+                maxlength="20"
+                autofocus
+                size="large"
+                type="password"
+                placeholder="请输入密码"
+              ></el-input>
+        </div>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="loginBoxShow = false">取 消</el-button>
+          <el-button type="primary" @click="loginBoxShow = false">登 录</el-button>
+        </span>
+      </el-dialog>
   </div>
 </template>
 
 <script>
+import { PageHelper } from "./PageHelper";
+
 export default {
-  name: 'App'
+  name: 'App',
+  data() {
+    return {
+      mobile:"",
+      password:"",
+      loginBoxShow:false
+    };
+  },
+  created:function(){
+    PageHelper.AppInstance=this;
+  },
+  methods:{
+    ShowLoginBox:function(){
+      this.loginBoxShow=true;
+    }
+  }
 }
 </script>
 <style  scoped>
