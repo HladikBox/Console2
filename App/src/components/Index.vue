@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div  class="bg-g">
     <el-carousel height="540px" arrow="never">
       <el-carousel-item v-for="item in indexbanner" :key="item">
         <div
@@ -12,7 +12,7 @@
               <div class="h1 bold f-w">{{item.name}}</div>
               <div class="f-w margin-top">{{item.summary}}</div>
               <div class="margin-top-4x">
-                <el-button round size="medium" type="primary" plain class="joinbtn bold">立即加入</el-button>
+                <el-button round size="medium" type="primary" @click="showloginbox"  plain class="joinbtn bold">立即加入</el-button>
               </div>
             </div>
             <div class="flex-1"></div>
@@ -238,7 +238,7 @@
             <div class="flex-1"></div>
           </div>
           <div class="text-center margin-top-4x" v-if="s2select==0">
-            <el-button type="primary" class="margin-top-4x bolder long-btn" round>立即注册</el-button>
+            <el-button type="primary" class="margin-top-4x bolder long-btn" @click="routeto('/register')" round>立即注册</el-button>
           </div>
           <div class="text-center margin-top-4x" v-if="s2select==1">
             <el-button type="primary" class="margin-top-4x bolder long-btn" round>联系商务</el-button>

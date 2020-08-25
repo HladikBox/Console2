@@ -1,6 +1,6 @@
 <template>
   <div class="padding" :class="{ 'bg-p': havebg }">
-    <div class="flex-row flex-center">
+    <div class="flex-row flex-center" >
       <div class="flex-1"></div>
       <div class="container flex-row flex-center">
         <div>
@@ -10,7 +10,7 @@
         <div class="f-w f16 pointer" @click="home">{{Inst.name}}</div>
         <div class="flex-1"></div>
         <el-link :underline="false" class="padding-right f-w" @click="home">主页</el-link>
-        <el-link :underline="false" class="padding-right f-w">管理中心</el-link>
+        <el-link :underline="false" class="padding-right f-w" @click="routeto('/management')">管理中心</el-link>
         <el-link :underline="false" class="padding-right f-w">文档中心</el-link>
         <el-link :underline="false" class="padding-right f-w">产品定价</el-link>
         <div>
@@ -58,7 +58,6 @@ export default {
   },
   methods: {
     ddlHandle: function(command) {
-      alert(command);
       if (command == "logout") {
         window.localStorage.removeItem("token");
         this.Member = null;

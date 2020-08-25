@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      <router-view style="min-height:100vh" class="bg-g" />
+      <router-view style="min-height:100vh"  />
       <el-dialog
         title="开发者账号登录"
         :visible.sync="loginBoxShow"
@@ -26,12 +26,15 @@
                 placeholder="请输入密码"
               ></el-input>
         </div>
-        <div class="margin-top">
+        <div class="margin-top f-d">
           &nbsp;{{loginboxerror}}
         </div>
         <div class="flex-row margin-top">
             <el-button class="flex-1 margin-right-1x" type="primary" @click="signin">登 录</el-button>
             <el-button class="flex-1 margin-left-1x"  @click="gosignup">注 册</el-button>
+        </div>
+        <div class="margin-top text-right">
+          <el-link type="primary" @click="goreset">忘记密码</el-link>
         </div>
       </el-dialog>
   </div>
@@ -59,7 +62,12 @@ export default {
       this.loginBoxShow=true;
     },
     gosignup:function(event){
+      this.loginBoxShow=false;
       this.$router.push("/register")
+    },
+    goreset:function(event){
+      this.loginBoxShow=false;
+      this.$router.push("/passwordreset")
     },
     signin:function(event){
       HttpHelper.Post("member/login", {
@@ -67,7 +75,7 @@ export default {
         password:this.password
       }).then((ret) => {
         if(ret.code==0){
-          window.localStorage.setItem("token",res.return);
+          window.localStorage.setItem("token",ret.return);
           window.location.reload();
         }else{
           this.loginboxerror=ret.return;
@@ -376,8 +384,14 @@ div{
 .bg-g{
   background: #ecf5fa;;
 }
+.bg-g2{
+  background: #f5f7fa;
+}
 .f-w{
   color:white ;
+}
+.f-p{
+  color:#409EFF ;
 }
 .f-d{
   color:#F56C6C ;
@@ -394,16 +408,16 @@ div{
 .bg-trans{
   background: transparent;
 }
-.long-btn-1x{
+.width-1x{
   width:100px;
 }
-.long-btn{
+.width{
   width:200px;
 }
-.long-btn-3x{
+.width-3x{
   width:300px;
 }
-.long-btn-4x{
+.width-4x{
   width:400px;
 }
 
@@ -415,5 +429,8 @@ div{
 }
 .bd-bottom{
   border-bottom:1px solid #d7dae2;
+}
+.bd-bottom {
+  border-bottom: 1px solid #f0f2f5;
 }
 </style>
