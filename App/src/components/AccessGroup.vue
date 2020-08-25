@@ -14,60 +14,126 @@
             </div>
           </div>
           <el-divider></el-divider>
-          <div>
-            <el-table :data="tableData" style="width: 100%">
-              <el-table-column label="组名称" width="180">
+          <div class="tablebody">
+            <el-table :data="grouplist" style="width: 100%">
+              <el-table-column label="组名称" >
                 <template slot-scope="scope">
-                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                  <span >{{ scope.row.name }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="人员表" width="180">
+              <el-table-column label="优先级" >
                 <template slot-scope="scope">
-                  <el-popover trigger="hover" placement="top">
-                    <p>姓名: {{ scope.row.name }}</p>
-                    <p>住址: {{ scope.row.address }}</p>
-                    <div slot="reference" class="name-wrapper">
-                      <el-tag size="medium">{{ scope.row.name }}</el-tag>
-                    </div>
-                  </el-popover>
+                  <span >{{ scope.row.seq }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="备注" width="180">
+              <el-table-column label="默认入组" >
                 <template slot-scope="scope">
-                  <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                  <span >{{ scope.row.isdefault?"是":"否" }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="操作">
+              <el-table-column label="权限" >
                 <template slot-scope="scope">
-                  <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                  <div >{{ scope.row.adminright_value=="Y"?"管理员":"" }}</div>
+                  <div >{{ scope.row.viewerright_value=="Y"?"观察员":"" }}</div>
+                  <div >{{ scope.row.designerright_value=="Y"?"需求产品设计":"" }}</div>
+                  <div >{{ scope.row.developerright_value=="Y"?"工程师":"" }}</div>
+                  <div >{{ scope.row.testright_value=="Y"?"测试运维":"" }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column label="人员" >
+                <template slot-scope="scope">
+                  <span >{{ scope.row.date }}</span>
+                  <el-button
+                    size="mini"
+                    @click="handlePeopleEdit(scope.row.id)">编辑人员</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column label="备注" >
+                <template slot-scope="scope">
+                  <span >{{ scope.row.description }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作" width="220px">
+                <template slot-scope="scope">
+                  <el-button
+                    size="mini"
+                    @click="handleEdit(scope.row.id)">编辑</el-button>
                   <el-button
                     size="mini"
                     type="danger"
-                    @click="handleDelete(scope.$index, scope.row)"
-                  >删除</el-button>
+                    @click="handleDelete( scope.row.id)">删除</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </div>
           <el-divider></el-divider>
           <div>
-              <el-button type="primary" plain icon="el-icon-plus">新增开发组</el-button>
+            <el-button type="primary" plain icon="el-icon-plus" @click="createNewGroup">新增开发组</el-button>
           </div>
         </div>
       </div>
       <div class="flex-1"></div>
     </div>
 
-    <el-dialog
-    title="管理组详情"
-    :visible.sync="centerDialogVisible"
-    width="500px"
-    center>
-    
-    
+    <el-dialog v-loading="loading" title="管理组详情" :visible.sync="centerDialogVisible" v-if="group!=null" width="500px" center>
+      <div class="flex-row flex-center">
+        <div class="width-1x">
+          <span class="f-d">*</span>组名
+        </div>
+        <div class="flex-1">
+          <el-input v-model="group.name" placeholder="请输入组名" maxlength="20"></el-input>
+        </div>
+      </div>
+      <div class="flex-row flex-center margin-top">
+        <div class="width-1x">优先级</div>
+        <div class="flex-1">
+          <el-input-number size="small" v-model="group.seq" :min="1" :max="10" label="设置优先级"></el-input-number>
+        </div>
+      </div>
+      <div class="flex-row flex-center margin-top">
+        <div class="width-1x">默认组</div>
+        <div class="flex-1">
+          <el-switch v-model="group.isdefault" active-color="#13ce66" inactive-color="#cccccc"></el-switch>
+        </div>
+      </div>
+      <div class="flex-row flex-center margin-top">
+        <div class="width-1x">备注</div>
+        <div class="flex-1">
+          <el-input v-model="group.description" placeholder="请输入备注"  maxlength="40"></el-input>
+        </div>
+      </div>
+      <div class="flex-row margin-top">
+        <div class="width-1x">权限组</div>
+        <div class="flex-1">
+          <div>
+            <el-checkbox v-model="group.adminright">管理员</el-checkbox>
+          </div>
+          <div class="margin-top">
+            <el-checkbox v-model="group.viewerright">观察员</el-checkbox>
+          </div>
+          <div class="margin-top">
+            <el-checkbox v-model="group.designerright">需求产品测试</el-checkbox>
+          </div>
+          <div class="margin-top">
+            <el-checkbox v-model="group.developerright">工程师</el-checkbox>
+          </div>
+          <div class="margin-top">
+            <el-checkbox v-model="group.testright">测试运维</el-checkbox>
+          </div>
+        </div>
+      </div>
+      <el-divider></el-divider>
+      <div class="flex-row flex-center">
+        <div class="flex-1"></div>
+        <div class="margin-right">
+          <el-button @click="hidegroup">取消</el-button>
+        </div>
+        <div class="margin-left">
+          <el-button type="primary" :disabled="group.name==''" @click="saveGroup">保存</el-button>
+        </div>
+        <div class="flex-1"></div>
+      </div>
     </el-dialog>
-
-
   </div>
 </template>
 <script>
@@ -82,37 +148,94 @@ export default {
       Res: {},
       Inst: {},
       Member: null,
-      centerDialogVisible:true,
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1519 弄"
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1516 弄"
-        }
-      ]
+      centerDialogVisible: false,
+      group: null,
+      loading:false,
+      grouplist: [
+      ],
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
+    this.loadgrouplist();
   },
-  methods: {}
+  methods: {
+    loadgrouplist(){
+      HttpHelper.Post("member/grouplist", {}).then((grouplist) => {
+            this.grouplist = grouplist;
+          });
+    },
+    hidegroup(event){
+      this.centerDialogVisible=false;
+      this.group=null;
+    },
+    createNewGroup(event){
+      this.loading=false;
+      this.centerDialogVisible=true;
+      this.group={
+        id: 0,
+        name: "",
+        description: "",
+        seq: 0,
+        isdefault: false,
+        adminright: false,
+        viewerright: false,
+        designerright: false,
+        developerright: false,
+        testright: false,
+      };
+    },
+    handleDelete(id){
+      this.$alert('确认删除该组吗？', '提示', {
+          confirmButtonText: '确定',
+          callback: action => {
+            HttpHelper.Post("member/deletegroup", {id:id}).then(() => {
+              this.loadgrouplist();
+            });
+          }
+      });
+    },
+    handleEdit(id){
+      HttpHelper.Post("member/groupinfo", {id:id}).then((group) => {
+        group.isdefault=group.isdefault_value=="Y";
+        group.adminright=group.adminright_value=="Y";
+        group.viewerright=group.viewerright_value=="Y";
+        group.designerright=group.designerright_value=="Y";
+        group.developerright=group.developerright_value=="Y";
+        group.testright=group.testright_value=="Y";
+        this.group=group;
+        this.loading=false;
+        this.centerDialogVisible=true;
+      });
+    },
+    saveGroup(event){
+      var json={
+        name: this.group.name,
+        description: this.group.description,
+        seq: this.group.seq,
+        isdefault: this.group.isdefault?"Y":"N",
+        adminright: this.group.adminright?"Y":"N",
+        viewerright: this.group.viewerright?"Y":"N",
+        designerright: this.group.designerright?"Y":"N",
+        developerright: this.group.developerright?"Y":"N",
+        testright: this.group.testright?"Y":"N",
+      };
+      if(this.group.id>0){
+        json.primary_id=this.group.id;
+      }
+      this.loading=true;
+      HttpHelper.Post("member/savegroup", json).then((content) => {
+        this.loading=true;
+        this.hidegroup();
+        this.loadgrouplist();
+      });
+    }
+  },
 };
 </script>
 <style scoped>
+.tablebody{
+  min-height: 300px;
+}
 </style>
