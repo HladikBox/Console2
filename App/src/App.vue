@@ -4,7 +4,7 @@
       <el-dialog
         title="开发者账号登录"
         :visible.sync="loginBoxShow"
-        width="30%"
+        width="300px"
         >
         <div>
           <el-input
@@ -26,16 +26,20 @@
                 placeholder="请输入密码"
               ></el-input>
         </div>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="loginBoxShow = false">取 消</el-button>
-          <el-button type="primary" @click="loginBoxShow = false">登 录</el-button>
-        </span>
+        <div class="margin-top">
+          &nbsp;{{loginboxerror}}
+        </div>
+        <div class="flex-row margin-top">
+            <el-button class="flex-1 margin-right-1x" type="primary" @click="signin">登 录</el-button>
+            <el-button class="flex-1 margin-left-1x"  @click="gosignup">注 册</el-button>
+        </div>
       </el-dialog>
   </div>
 </template>
 
 <script>
 import { PageHelper } from "./PageHelper";
+import { HttpHelper } from "./HttpHelper";
 
 export default {
   name: 'App',
@@ -43,7 +47,8 @@ export default {
     return {
       mobile:"",
       password:"",
-      loginBoxShow:false
+      loginBoxShow:false,
+      loginboxerror:""
     };
   },
   created:function(){
@@ -52,6 +57,23 @@ export default {
   methods:{
     ShowLoginBox:function(){
       this.loginBoxShow=true;
+    },
+    gosignup:function(event){
+      this.$router.push("/register")
+    },
+    signin:function(event){
+      HttpHelper.Post("member/login", {
+        mobile:this.mobile,
+        password:this.password
+      }).then((ret) => {
+        if(ret.code==0){
+          window.localStorage.setItem("token",res.return);
+          window.location.reload();
+        }else{
+          this.loginboxerror=ret.return;
+        }
+        
+      });
     }
   }
 }
@@ -356,6 +378,9 @@ div{
 }
 .f-w{
   color:white ;
+}
+.f-d{
+  color:#F56C6C ;
 }
 .f-g{
   color:#c3c3c3 ;

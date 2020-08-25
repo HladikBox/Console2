@@ -4,10 +4,10 @@
       <div class="flex-1"></div>
       <div class="container flex-row flex-center">
         <div>
-          <img class="logo" :src="uploadpath+'resource/'+Res.logow" />
+          <img class="logo pointer" :src="uploadpath+'resource/'+Res.logow" @click="home" />
         </div>
         <div class="dot bg-w margin-left-1x margin-right-1x"></div>
-        <div class="f-w f16">{{Inst.name}}</div>
+        <div class="f-w f16 pointer" @click="home">{{Inst.name}}</div>
         <div class="flex-1"></div>
         <el-link :underline="false" class="padding-right f-w" @click="home">主页</el-link>
         <el-link :underline="false" class="padding-right f-w">管理中心</el-link>

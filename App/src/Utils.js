@@ -20,4 +20,7 @@ export class Utils{
 
         return s;
     }
+    static IsMobile(mobile){
+        return Number(mobile).toString().length == 11 && mobile[0] == "1";;
+    }
 }

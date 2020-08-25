@@ -179,7 +179,7 @@ export default {
       });
     },
     ismobile: function(mobile) {
-      return Number(mobile).toString().length == 11 && mobile[0] == "1";
+      return Utils.IsMobile(mobile);
     },
     nextverifycode: function(event) {
       this.step=3;
