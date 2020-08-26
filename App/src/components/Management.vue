@@ -11,6 +11,25 @@
               <el-button type="primary" @click="createapplication">创建应用</el-button>
             </div>
           </div>
+          <div class="padding bd-bottom" v-for="app of applist" :key="app">
+            <div class="flex-row pointer" @click="routeto('/app/'+app.alias)">
+              <div class="margin-right">
+                <img class="icon" :src="uploadpath+'app/'+app.logo" />
+              </div>
+              <div class="flex-1">
+                <div class="flex-row flex-center">
+                  <div class="flex-1 margin-right">{{app.name}}</div>
+                  <div class="">{{app.devstatus_name}}</div>
+                </div>
+                <div class="flex-row flex-center margin-top-1x">
+                  <div class="flex-1 h7 margin-right">应用代号：{{app.alias}}</div>
+                  <div class="h7 margin-right">需求进度 0%</div>
+                  <div class="h7 margin-right">开发进度 0%</div>
+                  <div class="h7">测试进度 0%</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="margin-left-4x">
           <div class="flex-row">
@@ -104,12 +123,17 @@ export default {
     return {
       Res: {},
       Inst: {},
-      Member: null
+      Member: null,
+      applist:[]
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
+    
+    HttpHelper.Post("app/list", { testright: "Y" }).then(list => {
+      this.applist = list;
+    });
   },
   methods: {
     createapplication: function() {
@@ -121,6 +145,8 @@ export default {
           }
         });
         return;
+      }else{
+        this.routeto("/app-create");
       }
     }
   }

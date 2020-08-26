@@ -3,7 +3,11 @@
     <MyHeader></MyHeader>
     <div class="flex-row margin-top-4x margin-bottom">
       <div class="flex-1"></div>
-      <div class="container bg-w bd"></div>
+      <div class="container bg-w bd" v-if="appinfo!=null" >
+          <div class="padding-4x">
+              
+          </div>
+      </div>
       <div class="flex-1"></div>
     </div>
   </div>
@@ -19,12 +23,17 @@ export default {
     return {
       Res: {},
       Inst: {},
-      Member: null
+      Member: null,
+      appinfo:null
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
+    
+    HttpHelper.Post("app/info", { alias: this.$route.params.alias }).then(appinfo => {
+      this.appinfo = appinfo;
+    });
   },
   methods:{
 

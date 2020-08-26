@@ -420,6 +420,18 @@ div{
 .width-4x{
   width:400px;
 }
+.height-1x{
+  height:100px;
+}
+.height{
+  height:200px;
+}
+.height-3x{
+  height:300px;
+}
+.height-4x{
+  height:400px;
+}
 
 .bg-p{
   background: #409EFF;
@@ -432,5 +444,15 @@ div{
 }
 .bd-bottom {
   border-bottom: 1px solid #f0f2f5;
+}
+
+.scroll-x{
+  overflow-x: scroll;
+}
+.scroll-y{
+  overflow-y: auto;
+}
+.scroll{
+  overflow: scroll;
 }
 </style>

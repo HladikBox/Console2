@@ -9,6 +9,8 @@ import Management from '@/components/Management'
 import Account from '@/components/Account'
 import Certification from '@/components/Certification'
 import AccessGroup from '@/components/AccessGroup'
+import AppCreate from '@/components/AppCreate'
+import App from '@/components/App'
 
 Vue.use(Router)
 
@@ -53,6 +55,16 @@ export default new Router({
       path: '/access-group',
       name: 'AccessGroup',
       component: AccessGroup
+    },
+    {
+      path: '/app-create',
+      name: 'AppCreate',
+      component: AppCreate
+    },
+    {
+      path: '/app/:alias',
+      name: 'App',
+      component: App
     }
   ]
 })

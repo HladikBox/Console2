@@ -71,6 +71,10 @@ export class PageHelper {
         });
       } else {
         page.Member = PageHelper.Member;
+        HttpHelper.Post("member/info", {}).then((Member) => {
+          page.Member = Member;
+          PageHelper.Member = Member;
+        });
       }
     } else {
       page.Member = null;
