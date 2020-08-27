@@ -14,7 +14,7 @@
         <el-link :underline="false" class="padding-right f-w">文档中心</el-link>
         <el-link :underline="false" class="padding-right f-w">产品定价</el-link>
         <div>
-          <el-input prefix-icon="el-icon-search" placeholder="搜索" v-model="search"></el-input>
+          <el-input size="mini" prefix-icon="el-icon-search" placeholder="搜索" v-model="search"></el-input>
         </div>
         <div class="split bg-w margin-left margin-right"></div>
         <el-link :underline="false" class="padding-right f-w" v-if="Member==null" @click="showloginbox">登录</el-link>
@@ -73,7 +73,4 @@ export default {
 </script>
 
 <style scoped>
-.logo {
-  height: 18px;
-}
 </style>

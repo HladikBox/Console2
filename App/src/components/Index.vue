@@ -384,9 +384,6 @@ export default {
 };
 </script>
 <style scoped>
-.logo {
-  height: 18px;
-}
 .indexbanner {
   height: 540px;
 }

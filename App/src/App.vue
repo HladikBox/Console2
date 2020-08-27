@@ -93,6 +93,9 @@ export default {
 }
 </style>
 <style>
+.logo {
+  height: 18px;
+}
 div{
 }
 .container{
