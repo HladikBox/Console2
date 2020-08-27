@@ -11,6 +11,9 @@ import Certification from '@/components/Certification'
 import AccessGroup from '@/components/AccessGroup'
 import AppCreate from '@/components/AppCreate'
 import App from '@/components/App'
+import AppSchedule from '@/components/AppSchedule'
+import AppOverview from '@/components/AppOverview'
+import AppScheduleCreate from '@/components/AppScheduleCreate'
 
 Vue.use(Router)
 
@@ -64,7 +67,29 @@ export default new Router({
     {
       path: '/app/:alias',
       name: 'App',
-      component: App
+      component: App,
+      children: [
+        {
+          path: '',
+          name: 'AppOverview',
+          component: AppOverview
+        },
+        {
+          path: 'overview',
+          name: 'AppOverview',
+          component: AppOverview
+        },
+        {
+          path: 'schedule',
+          name: 'AppSchedule',
+          component: AppSchedule
+        },
+        {
+          path: 'schedule-create',
+          name: 'AppScheduleCreate',
+          component: AppScheduleCreate
+        }
+      ]
     }
   ]
 })

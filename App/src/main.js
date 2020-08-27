@@ -6,6 +6,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
 import Header from './components/Header'
+import mavonEditor from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
+// use
+Vue.use(mavonEditor)
 
 Vue.use(ElementUI)
 Vue.component('MyHeader', Header);

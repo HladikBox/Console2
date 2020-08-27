@@ -9,14 +9,14 @@
             <el-breadcrumb-item>{{appinfo.name}}</el-breadcrumb-item>
           </el-breadcrumb>
         </div>
-        <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal">
-          <el-menu-item index="1">
+        <el-menu :default-active="'AppOverview'" class="el-menu-demo" mode="horizontal">
+          <el-menu-item index="AppOverview" @click="routeto('/app/'+appinfo.alias+'/overview')">
             <template slot="title">
               <i class="el-icon-data-analysis"></i>
               <span>总揽</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="2">
+          <el-menu-item index="AppSchedule" @click="routeto('/app/'+appinfo.alias+'/schedule')">
             <template slot="title">
               <i class="el-icon-s-order"></i>
               <span>项目计划</span>
@@ -54,7 +54,9 @@
           </el-menu-item>
         </el-menu>
       </div>
-      <div class="bg-w" style="min-height:100vh"></div>
+      <div class="bg-w" style="min-height:100vh">
+        <router-view :appinfo="appinfo"  />
+      </div>
     </div>
   </div>
 </template>
@@ -76,6 +78,8 @@ export default {
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
+
+    console.log("route",this.$route);
 
     HttpHelper.Post("app/info", { alias: this.$route.params.alias }).then(
       (appinfo) => {
