@@ -6,13 +6,20 @@ import 'element-ui/lib/theme-chalk/index.css'
 import App from './App'
 import router from './router'
 import Header from './components/Header'
+import PeroidGenerate from './components/PeroidGenerate'
+import FuncGenerate from './components/FuncGenerate'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import fullCalendar from 'vue-fullcalendar'
+
+Vue.component('full-calendar', fullCalendar)
 // use
 Vue.use(mavonEditor)
 
 Vue.use(ElementUI)
 Vue.component('MyHeader', Header);
+Vue.component('PeroidGenerate', PeroidGenerate);
+Vue.component('FuncGenerate', FuncGenerate);
 
 Vue.config.productionTip = false
 

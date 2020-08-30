@@ -234,7 +234,7 @@ export default {
     },
     removeinsearchlist(item) {
       this.searchlist = this.searchlist.filter(t => {
-        t.yycno != item.yycno;
+        return t.yycno != item.yycno;
       });
     },
     removepeople(yycno) {
@@ -264,7 +264,7 @@ export default {
       }).then(ret => {
         if (ret.code == 0) {
           this.searchlist = this.searchlist.filter(t => {
-            t.yycno != item.yycno;
+            return t.yycno != item.yycno;
           });
           this.$message({
             message: "添加成功",

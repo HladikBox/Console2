@@ -14,6 +14,8 @@ import App from '@/components/App'
 import AppSchedule from '@/components/AppSchedule'
 import AppOverview from '@/components/AppOverview'
 import AppScheduleCreate from '@/components/AppScheduleCreate'
+import AppSetting from '@/components/AppSetting'
+import AppSpec from '@/components/AppSpec'
 
 Vue.use(Router)
 
@@ -83,6 +85,16 @@ export default new Router({
           path: 'schedule',
           name: 'AppSchedule',
           component: AppSchedule
+        },
+        {
+          path: 'spec',
+          name: 'AppSpec',
+          component: AppSpec
+        },
+        {
+          path: 'setting',
+          name: 'AppSetting',
+          component: AppSetting
         },
         {
           path: 'schedule-create',

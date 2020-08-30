@@ -4,10 +4,21 @@
     <div v-if="appinfo!=null">
       <div class="bd-bottom">
         <div class="padding">
-          <el-breadcrumb separator="/" class="h3">
-            <el-breadcrumb-item :to="{ path: '/management' }">管理中心</el-breadcrumb-item>
-            <el-breadcrumb-item>{{appinfo.name}}</el-breadcrumb-item>
-          </el-breadcrumb>
+          <div class="flex-row">
+            <div class="flex-1">
+              <el-breadcrumb separator="/" class="h3">
+                <el-breadcrumb-item :to="{ path: '/management' }">管理中心</el-breadcrumb-item>
+                <el-breadcrumb-item>{{appinfo.name}}</el-breadcrumb-item>
+              </el-breadcrumb>
+            </div>
+            <div>
+              <el-button type="primary" v-if="appinfo.devstatus=='A'" @click="startdesign">开始需求设计阶段</el-button>
+              <el-button type="primary" v-if="appinfo.devstatus=='B'">开始开发阶段</el-button>
+              <el-button type="primary" v-if="appinfo.devstatus=='C'">开始测试阶段</el-button>
+              <el-button type="primary" v-if="appinfo.devstatus=='D'">开始试运行阶段</el-button>
+              <el-button type="primary" v-if="appinfo.devstatus=='E'">项目阶段完成</el-button>
+            </div>
+          </div>
         </div>
         <el-menu :default-active="'AppOverview'" class="el-menu-demo" mode="horizontal">
           <el-menu-item index="AppOverview" @click="routeto('/app/'+appinfo.alias+'/overview')">
@@ -22,7 +33,7 @@
               <span>项目计划</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="3">
+          <el-menu-item index="AppSpec" @click="routeto('/app/'+appinfo.alias+'/spec')">
             <template slot="title">
               <i class="el-icon-document"></i>
               <span>需求中心</span>
@@ -46,7 +57,7 @@
               <span>部署</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="7">
+          <el-menu-item index="7" @click="routeto('/app/'+appinfo.alias+'/setting')">
             <template slot="title">
               <i class="el-icon-setting"></i>
               <span>设置</span>
@@ -55,9 +66,10 @@
         </el-menu>
       </div>
       <div class="bg-w" style="min-height:100vh">
-        <router-view :appinfo="appinfo"  />
+        <router-view :appinfo="appinfo" />
       </div>
     </div>
+    <el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
   </div>
 </template>
 <script>
@@ -73,21 +85,35 @@ export default {
       Inst: {},
       Member: null,
       appinfo: null,
+      startdesigncontent:{}
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
 
-    console.log("route",this.$route);
+    console.log("route", this.$route);
 
     HttpHelper.Post("app/info", { alias: this.$route.params.alias }).then(
       (appinfo) => {
         this.appinfo = appinfo;
       }
     );
+
+    HttpHelper.Post("content/get", { keycode: "startdesign" }).then(content => {
+      content.content = Utils.HtmlDecode(content.content);
+      this.startdesigncontent = content;
+    });
   },
-  methods: {},
+  methods: {
+    startdesign(event) {
+      this.$alert(this.startdesigncontent.content, '提示', {
+          dangerouslyUseHTMLString: true
+        }).then(()=>{
+          
+        });
+    },
+  },
 };
 </script>
 <style scoped>
