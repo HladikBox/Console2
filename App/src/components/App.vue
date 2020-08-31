@@ -110,7 +110,13 @@ export default {
       this.$alert(this.startdesigncontent.content, '提示', {
           dangerouslyUseHTMLString: true
         }).then(()=>{
-          
+          HttpHelper.Post("app/startdesign", {appalias:this.appinfo.alias}).then(ret => {
+            if(ret.code=="0"){
+              window.location.reload();
+            }else{
+              this.$message("开始失败，请联系管理员查看原因");
+            }
+          });
         });
     },
   },

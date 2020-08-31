@@ -30,6 +30,13 @@
               <div class="h3">产品设计</div>
               <div class="margin-top-4x">
                 <div v-if="appinfo.devstatus=='A'">请先进入需求设计阶段，再开始需求分析</div>
+                <div v-else>
+                    <div class="flex-row flex-wrap">
+                        <el-card class="design-card" :body-style="{ padding: '0px' }">
+                            <img  />
+                        </el-card>
+                    </div>
+                </div>
               </div>
             </div>
           </el-tab-pane>
@@ -115,3 +122,18 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+.design-card{
+    width:270px;
+    height:350px;
+}
+
+.design-card .cover{
+    width:270px;
+    height:270px;
+}
+
+
+
+</style>
