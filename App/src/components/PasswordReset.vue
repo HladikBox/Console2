@@ -34,7 +34,7 @@
               <div class="flex-1"></div>
               <div>
                 <div class="flex-row flex-center">
-                  <div class="margin-right rl">手机号</div>
+                  <div class="margin-right width">手机号</div>
                   <div>
                     <el-input
                       placeholder="请输入手机号码"
@@ -59,7 +59,7 @@
                   </div>
                 </div>
                 <div class="flex-row flex-center margin-top">
-                  <div class="margin-right rl">验证码</div>
+                  <div class="margin-right width">验证码</div>
                   <div>
                     <el-input placeholder="请输入验证码" maxlength="6" v-model="verifycode"></el-input>
                   </div>
@@ -79,13 +79,13 @@
               <div class="flex-1"></div>
               <div>
                 <div class="flex-row flex-center margin-top">
-                  <div class="margin-right rl">密码</div>
+                  <div class="margin-right width">密码</div>
                   <div>
                     <el-input placeholder="请输入不少于6位数密码" maxlength="20" v-model="password"></el-input>
                   </div>
                 </div>
                 <div class="flex-row flex-center margin-top">
-                  <div class="margin-right rl">确认密码</div>
+                  <div class="margin-right width">确认密码</div>
                   <div>
                     <el-input placeholder="请输入不少于6位数密码" maxlength="20" v-model="password2"></el-input>
                   </div>
