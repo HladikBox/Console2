@@ -11,6 +11,9 @@ import FuncGenerate from './components/FuncGenerate'
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import fullCalendar from 'vue-fullcalendar'
+import echarts from 'echarts'
+
+Vue.prototype.$echarts = echarts
 
 Vue.component('full-calendar', fullCalendar)
 // use

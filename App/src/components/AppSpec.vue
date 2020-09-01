@@ -27,29 +27,121 @@
           </el-tab-pane>
           <el-tab-pane label="产品设计" name="产品设计">
             <div class="padding-left">
-              <div class="h3">产品设计</div>
+              <div class="flex-row">
+                <div class="flex-1 h3">产品设计</div>
+                <div>
+                  <el-radio-group v-model="viewmode" size="small" @change="changeviemode">
+                    <el-radio-button label="卡片模式"></el-radio-button>
+                    <el-radio-button label="浏览模式"></el-radio-button>
+                    <el-radio-button label="进度模式"></el-radio-button>
+                  </el-radio-group>
+                </div>
+              </div>
               <div class="margin-top-4x">
                 <div v-if="appinfo.devstatus=='A'">请先进入需求设计阶段，再开始需求分析</div>
                 <div v-else>
-                  <div class="flex-row flex-wrap" >
+                  <div class="flex-row flex-wrap" v-if="viewmode=='进度模式'">
+                    <div ref="chart" style="width:100%;min-height:375px" :style="{height:(speclist.length*60)+ 'px'}"></div>
+                  </div>
+                  <div class="flex-row flex-wrap" v-if="viewmode=='卡片模式'">
                     <el-card
-                    v-for="item of speclist" :key="item"
+                      v-for="item of speclist"
+                      :key="item"
                       class="design-card margin-bottom margin-right"
                       :body-style="{ padding: '0px' }"
                     >
-                      <img class="cover" :src="uploadpath+'resource/'+Res.add"
-                      
-                      @click="loadproductdesign(item.id)"
-                       />
+                      <el-image class="cover" :src="uploadpath+'appspec/'+item.cover">
+                        <div slot="placeholder" class="image-slot">
+                          加载中
+                          <span class="dot">...</span>
+                        </div>
+                      </el-image>
                       <div class="padding-1x">
-                        <div class="h4 bolder">{{item.name}}</div>
-                        <div class="h7 f-g">{{item.summary}}</div>
+                        <div class="h4">{{item.name}}</div>
+                        <div class="flex-row">
+                          <div class="h7 flex-1 f-g margin-top-1x">{{item.summary}}</div>
+                          <div>
+                            <el-dropdown @command="carddropmenu">
+                              <span class="el-dropdown-link">
+                                <i class="el-icon-more" type="primary"></i>
+                              </span>
+                              <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="modify" :id="item.id">修改</el-dropdown-item>
+                                <el-dropdown-item command="b">编辑</el-dropdown-item>
+                              </el-dropdown-menu>
+                            </el-dropdown>
+                          </div>
+                        </div>
                       </div>
                     </el-card>
                   </div>
+                  <div v-if="viewmode=='浏览模式'">
+                    <div class="flex-row">
+                      <div class="flex-1 padding-right bd-right">
+                        <div class="margin-top" v-for="item of speclist" :key="item">
+                          <div class="flex-row">
+                            <div class="h3 flex-1" :id="'k_'+item.id">{{item.name}}</div>
+                            <div>
+                              <el-button type="primary" @click="loadproductdesign(item.id)">修改</el-button>
+                            </div>
+                          </div>
+                          <div class="h6 margin-top f-g">{{item.summary}}</div>
+                          <div class="flex-row flex-wrap">
+                            <div
+                              v-for="item2 of item.designlist"
+                              :key="item2"
+                              class="pointer"
+                              @click="handle2Preview(uploadpath+'appspec/'+item2.file)"
+                            >
+                              <el-image
+                                fit="contain"
+                                class="cover margin-top margin-right"
+                                :src="uploadpath+'appspec/'+item2.file"
+                              >
+                                <div slot="placeholder" class="image-slot">
+                                  加载中
+                                  <span class="dot">...</span>
+                                </div>
+                              </el-image>
+                              <div class="text-center margin-top h7 f-g">{{item2.name}}</div>
+                            </div>
+                            <div
+                              v-for="item2 of item.uidesignlist"
+                              :key="item2"
+                              class="pointer"
+                              @click="handle2Preview(uploadpath+'appspec/'+item2.file)"
+                            >
+                              <el-image
+                                fit="contain"
+                                class="cover margin-top margin-right"
+                                :src="uploadpath+'appspec/'+item2.file"
+                              >
+                                <div slot="placeholder" class="image-slot">
+                                  加载中
+                                  <span class="dot">...</span>
+                                </div>
+                              </el-image>
+                              <div class="text-center margin-top h7 f-g">{{item2.name}}</div>
+                            </div>
+                          </div>
+                          <el-divider></el-divider>
+                        </div>
+                      </div>
+                      <div class="width">
+                        <div class="rightmenu">
+                          <div
+                            v-for="item of speclist"
+                            :key="item"
+                            class="padding-1x pointer f-g navitem"
+                            @click="godesign(item.id)"
+                          >{{item.name}}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div>
+              <div class="margin-top-4x">
                 <el-button type="primary" @click="addproductdesign">
                   新增产品设计
                   <i class="el-icon-upload"></i>
@@ -112,9 +204,9 @@
           <div class="margin-right width-1x">产品设计图</div>
           <div>
             <el-upload
-              name="productdesign"
+              name="appspec"
               class="upload-demo"
-              :action="fileupload+'?rettype=json&module=productdesign&field=productdesign'"
+              :action="fileupload+'?rettype=json&module=appspec&field=appspec'"
               :file-list="productdesign.designlist"
               list-type="picture"
               multiple
@@ -131,9 +223,9 @@
           <div class="margin-right width-1x">UI设计图</div>
           <div>
             <el-upload
-              name="uidesignlist"
+              name="appspec"
               class="upload-demo"
-              :action="fileupload+'?rettype=json&module=uidesignlist&field=uidesignlist'"
+              :action="fileupload+'?rettype=json&module=appspec&field=appspec'"
               :file-list="productdesign.uidesignlist"
               list-type="picture"
               multiple
@@ -258,6 +350,7 @@
       </div>
       <div class="margin-top">
         <el-button type="success" :disabled="productdesign.name==''" @click="saveSpec">保存</el-button>
+        <el-button type="danger" v-if="productdesign.id!=undefined" @click="deleteSpec">删除</el-button>
       </div>
     </el-dialog>
     <el-dialog title="修改项目功能需求" :visible.sync="funcchangeshow" center width="900px">
@@ -282,13 +375,14 @@ export default {
   props: {
     appinfo: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
       Res: {},
       Inst: {},
+      viewmode: "浏览模式",
       Member: null,
       schedulelist: [],
       funclist: [],
@@ -305,17 +399,17 @@ export default {
         developprogress: 0,
         testprogress: 0,
         designlist: [],
-        uidesignlist: []
+        uidesignlist: [],
       },
-      speclist: []
+      speclist: [],
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
     HttpHelper.Post("app/schedulelist", {
-      appalias: this.appinfo.alias
-    }).then(schedulelist => {
+      appalias: this.appinfo.alias,
+    }).then((schedulelist) => {
       this.schedulelist = schedulelist;
       if (this.schedulelist.length > 0) {
         this.info = this.schedulelist[0];
@@ -325,15 +419,122 @@ export default {
     });
   },
   methods: {
+    loadChartData() {
+      const chart = this.$refs.chart;
+      if (chart) {
+        var datayAxis=[];
+        var a1=[];
+        var a2=[];
+        var a3=[];
+        var a4=[];
+        for(var item of this.speclist){
+            datayAxis.push(item.name);
+            a1.push(item.uidesignprogress);
+            a2.push(item.apiprogress);
+            a3.push(item.developprogress);
+            a4.push(item.testprogress);
+        }
+        const myChart = this.$echarts.init(chart);
+        const option = {
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              // 坐标轴指示器，坐标轴触发有效
+              type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
+            },
+          },
+          legend: {
+            data: ["UI设计", "接口设计", "功能开发", "测试"],
+          },
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            containLabel: true,
+          },
+          xAxis: {
+            type: "value",
+          },
+          yAxis: {
+            type: "category",
+            data: datayAxis,
+          },
+          series: [
+            {
+              name: "UI设计",
+              type: "bar",
+              stack: "总量",
+              label: {
+                show: true,
+                position: "insideRight",
+              },
+              data: a1,
+            },
+            {
+              name: "接口设计",
+              type: "bar",
+              stack: "总量",
+              label: {
+                show: true,
+                position: "insideRight",
+              },
+              data: a2,
+            },
+            {
+              name: "功能开发",
+              type: "bar",
+              stack: "总量",
+              label: {
+                show: true,
+                position: "insideRight",
+              },
+              data: a3,
+            },
+            {
+              name: "测试",
+              type: "bar",
+              stack: "总量",
+              label: {
+                show: true,
+                position: "insideRight",
+              },
+              data: a4,
+            }
+          ],
+        };
+
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+          myChart.resize();
+        });
+      }
+      this.$on("hook:destroyed", () => {
+        window.removeEventListener("resize", function () {
+          myChart.resize();
+        });
+      });
+    },
+    changeviemode(label) {
+      if (label == "进度模式") {
+        this.loadChartData();
+      }
+    },
+    godesign(id) {
+      document.querySelector("#k_" + id).scrollIntoView(true);
+    },
+    carddropmenu(comm, event) {
+      console.log("carddropmenu", comm, event);
+      this.loadproductdesign(event.$el.id);
+    },
     minus(num) {
-      num=parseInt(num);
+      num = parseInt(num);
       if (num <= 0) {
         return 0;
       }
       return num - 10;
     },
     plus(num) {
-      num=parseInt(num);
+      num = parseInt(num);
       if (num >= 100) {
         return 100;
       }
@@ -342,14 +543,18 @@ export default {
     handle2Remove(file, fileList) {
       this.productdesign.uidesignlist = fileList;
     },
-    handleChange(file, fileList) {
+    handle2Change(file, fileList) {
       this.productdesign.uidesignlist = this.redo(fileList);
     },
-    handle2Remove(file, fileList) {
+    handleRemove(file, fileList) {
       this.productdesign.designlist = fileList;
     },
     handleChange(file, fileList) {
       this.productdesign.designlist = this.redo(fileList);
+    },
+    handle2Preview(url) {
+      this.dialogVisible = true;
+      this.dialogImageUrl = url;
     },
     handlePreview(file) {
       this.dialogVisible = true;
@@ -365,20 +570,32 @@ export default {
         developprogress: 0,
         testprogress: 0,
         designlist: [],
-        uidesignlist: []
+        uidesignlist: [],
       };
       this.showproductupload = true;
     },
     loadspeclist() {
       HttpHelper.Post("app/speclist", {
         appalias: this.appinfo.alias,
-        appschedule_id: this.info.id
-      }).then(speclist => {
+        appschedule_id: this.info.id,
+      }).then((speclist) => {
         this.speclist = speclist;
+        this.loadChartData();
       });
     },
     loadproductdesign(vpid) {
-      HttpHelper.Post("app/specinfo", {id:vpid}).then(ret => {
+      HttpHelper.Post("app/specinfo", {
+        appalias: this.appinfo.alias,
+        id: vpid,
+      }).then((ret) => {
+        for (var i = 0; i < ret.designlist.length; i++) {
+          ret.designlist[i].url =
+            this.uploadpath + "appspec/" + ret.designlist[i].file;
+        }
+        for (var i = 0; i < ret.uidesignlist.length; i++) {
+          ret.uidesignlist[i].url =
+            this.uploadpath + "appspec/" + ret.uidesignlist[i].file;
+        }
         this.productdesign = ret;
         this.showproductupload = true;
       });
@@ -390,8 +607,8 @@ export default {
       HttpHelper.Post("app/funcupdatebatch", {
         datajson: JSON.stringify(this.funclist),
         appalias: this.appinfo.alias,
-        appschedule_id: this.info.id
-      }).then(ret => {
+        appschedule_id: this.info.id,
+      }).then((ret) => {
         if (ret.code == "0") {
           this.loadfunclist();
           this.funcchangeshow = false;
@@ -402,8 +619,8 @@ export default {
     },
     loadfunclist() {
       HttpHelper.Post("app/funclist", {
-        appschedule_id: this.info.id
-      }).then(funclist => {
+        appschedule_id: this.info.id,
+      }).then((funclist) => {
         this.funclist = funclist;
       });
     },
@@ -419,25 +636,66 @@ export default {
       }
       return fileList;
     },
+    deleteSpec() {
+      this.$confirm(
+        "是否确定删除" + this.productdesign.name + "的设计图?",
+        "提示",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "danger",
+        }
+      ).then(() => {
+        HttpHelper.Post("app/deletespec", {
+          appalias: this.appinfo.alias,
+          appschedule_id: this.info.id,
+          id: this.productdesign.id,
+        }).then((ret) => {
+          this.$message("删除成功");
+          this.showproductupload = false;
+          this.loadspeclist();
+        });
+      });
+    },
     saveSpec() {
       var json = this.productdesign;
       json.appalias = this.appinfo.alias;
       json.appschedule_id = this.info.id;
-      HttpHelper.Post("app/updatespec", json).then(ret => {
+      console.log("productdesign", this.productdesign);
+      if (this.productdesign.designlist.length > 0) {
+        json.cover = this.productdesign.designlist[0].file;
+      }
+      if (this.productdesign.uidesignlist.length > 0) {
+        json.cover = this.productdesign.uidesignlist[0].file;
+      }
+
+      HttpHelper.Post("app/updatespec", json).then((ret) => {
         if (ret.code == 0) {
           this.$message("新增成功");
+
+          HttpHelper.Post("app/specdesignbatch", {
+            appalias: this.appinfo.alias,
+            appspec_id: ret.return,
+            datajson: JSON.stringify(this.productdesign.designlist),
+          });
+          HttpHelper.Post("app/specuidesignbatch", {
+            appalias: this.appinfo.alias,
+            appspec_id: ret.return,
+            datajson: JSON.stringify(this.productdesign.uidesignlist),
+          });
+
           this.showproductupload = false;
           this.loadspeclist();
         } else {
           this.$message({
             showClose: true,
             message: ret.return,
-            type: "warning"
+            type: "warning",
           });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -446,8 +704,17 @@ export default {
   height: 350px;
 }
 
-.design-card .cover {
+.cover {
   width: 270px;
   height: 270px;
+}
+.rightmenu {
+  position: fixed;
+  right: 30px;
+  top: 300px;
+  height: 100vh;
+}
+.navitem:hover {
+  color: #090909;
 }
 </style>

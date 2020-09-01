@@ -445,8 +445,8 @@ div{
 .bd-bottom{
   border-bottom:1px solid #d7dae2;
 }
-.bd-bottom {
-  border-bottom: 1px solid #f0f2f5;
+.bd-right {
+  border-right: 1px solid #f0f2f5;
 }
 
 .scroll-x{

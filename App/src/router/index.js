@@ -16,6 +16,7 @@ import AppOverview from '@/components/AppOverview'
 import AppScheduleCreate from '@/components/AppScheduleCreate'
 import AppSetting from '@/components/AppSetting'
 import AppSpec from '@/components/AppSpec'
+import AppDev from '@/components/AppDev'
 
 Vue.use(Router)
 
@@ -90,6 +91,11 @@ export default new Router({
           path: 'spec',
           name: 'AppSpec',
           component: AppSpec
+        },
+        {
+          path: 'dev',
+          name: 'AppDev',
+          component: AppDev
         },
         {
           path: 'setting',

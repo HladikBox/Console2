@@ -39,7 +39,7 @@
               <span>需求中心</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="4">
+          <el-menu-item index="AppDev" @click="routeto('/app/'+appinfo.alias+'/dev')">
             <template slot="title">
               <i class="el-icon-office-building"></i>
               <span>研发工作区</span>
