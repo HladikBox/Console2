@@ -13,7 +13,7 @@
             </div>
             <div>
               <el-button type="primary" v-if="appinfo.devstatus=='A'" @click="startdesign">开始需求设计阶段</el-button>
-              <el-button type="primary" v-if="appinfo.devstatus=='B'">开始开发阶段</el-button>
+              <el-button type="primary" v-if="appinfo.devstatus=='B'" @click="startdevelop">开始开发阶段</el-button>
               <el-button type="primary" v-if="appinfo.devstatus=='C'">开始测试阶段</el-button>
               <el-button type="primary" v-if="appinfo.devstatus=='D'">开始试运行阶段</el-button>
               <el-button type="primary" v-if="appinfo.devstatus=='E'">项目阶段完成</el-button>
@@ -85,7 +85,8 @@ export default {
       Inst: {},
       Member: null,
       appinfo: null,
-      startdesigncontent:{}
+      startdesigncontent:{},
+      startdevelopcontent:{}
     };
   },
   created() {
@@ -104,6 +105,10 @@ export default {
       content.content = Utils.HtmlDecode(content.content);
       this.startdesigncontent = content;
     });
+    HttpHelper.Post("content/get", { keycode: "startdevelop" }).then(content => {
+      content.content = Utils.HtmlDecode(content.content);
+      this.startdevelopcontent = content;
+    });
   },
   methods: {
     startdesign(event) {
@@ -111,6 +116,19 @@ export default {
           dangerouslyUseHTMLString: true
         }).then(()=>{
           HttpHelper.Post("app/startdesign", {appalias:this.appinfo.alias}).then(ret => {
+            if(ret.code=="0"){
+              window.location.reload();
+            }else{
+              this.$message("开始失败，请联系管理员查看原因");
+            }
+          });
+        });
+    },
+    startdevelop(event) {
+      this.$alert(this.startdevelopcontent.content, '提示', {
+          dangerouslyUseHTMLString: true
+        }).then(()=>{
+          HttpHelper.Post("app/startdevelop", {appalias:this.appinfo.alias}).then(ret => {
             if(ret.code=="0"){
               window.location.reload();
             }else{
