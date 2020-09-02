@@ -41,7 +41,11 @@
                 <div v-if="appinfo.devstatus=='A'">请先进入需求设计阶段，再开始需求分析</div>
                 <div v-else>
                   <div class="flex-row flex-wrap" v-if="viewmode=='进度模式'">
-                    <div ref="chart" style="width:100%;min-height:375px" :style="{height:(speclist.length*60)+ 'px'}"></div>
+                    <div
+                      ref="chart"
+                      style="width:100%;min-height:375px"
+                      :style="{height:(speclist.length*60)+ 'px'}"
+                    ></div>
                   </div>
                   <div class="flex-row flex-wrap" v-if="viewmode=='卡片模式'">
                     <el-card
@@ -375,8 +379,8 @@ export default {
   props: {
     appinfo: {
       type: Object,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
@@ -399,17 +403,17 @@ export default {
         developprogress: 0,
         testprogress: 0,
         designlist: [],
-        uidesignlist: [],
+        uidesignlist: []
       },
-      speclist: [],
+      speclist: []
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
     HttpHelper.Post("app/schedulelist", {
-      appalias: this.appinfo.alias,
-    }).then((schedulelist) => {
+      appalias: this.appinfo.alias
+    }).then(schedulelist => {
       this.schedulelist = schedulelist;
       if (this.schedulelist.length > 0) {
         this.info = this.schedulelist[0];
@@ -422,17 +426,17 @@ export default {
     loadChartData() {
       const chart = this.$refs.chart;
       if (chart) {
-        var datayAxis=[];
-        var a1=[];
-        var a2=[];
-        var a3=[];
-        var a4=[];
-        for(var item of this.speclist){
-            datayAxis.push(item.name);
-            a1.push(item.uidesignprogress);
-            a2.push(item.apiprogress);
-            a3.push(item.developprogress);
-            a4.push(item.testprogress);
+        var datayAxis = [];
+        var a1 = [];
+        var a2 = [];
+        var a3 = [];
+        var a4 = [];
+        for (var item of this.speclist) {
+          datayAxis.push(item.name);
+          a1.push(item.uidesignprogress);
+          a2.push(item.apiprogress);
+          a3.push(item.developprogress);
+          a4.push(item.testprogress);
         }
         const myChart = this.$echarts.init(chart);
         const option = {
@@ -440,24 +444,24 @@ export default {
             trigger: "axis",
             axisPointer: {
               // 坐标轴指示器，坐标轴触发有效
-              type: "shadow", // 默认为直线，可选为：'line' | 'shadow'
-            },
+              type: "shadow" // 默认为直线，可选为：'line' | 'shadow'
+            }
           },
           legend: {
-            data: ["UI设计", "接口设计", "功能开发", "测试"],
+            data: ["UI设计", "接口设计", "功能开发", "测试"]
           },
           grid: {
             left: "3%",
             right: "4%",
             bottom: "3%",
-            containLabel: true,
+            containLabel: true
           },
           xAxis: {
-            type: "value",
+            type: "value"
           },
           yAxis: {
             type: "category",
-            data: datayAxis,
+            data: datayAxis
           },
           series: [
             {
@@ -466,9 +470,9 @@ export default {
               stack: "总量",
               label: {
                 show: true,
-                position: "insideRight",
+                position: "insideRight"
               },
-              data: a1,
+              data: a1
             },
             {
               name: "接口设计",
@@ -476,9 +480,9 @@ export default {
               stack: "总量",
               label: {
                 show: true,
-                position: "insideRight",
+                position: "insideRight"
               },
-              data: a2,
+              data: a2
             },
             {
               name: "功能开发",
@@ -486,9 +490,9 @@ export default {
               stack: "总量",
               label: {
                 show: true,
-                position: "insideRight",
+                position: "insideRight"
               },
-              data: a3,
+              data: a3
             },
             {
               name: "测试",
@@ -496,20 +500,23 @@ export default {
               stack: "总量",
               label: {
                 show: true,
-                position: "insideRight",
+                position: "insideRight"
               },
-              data: a4,
+              data: a4
             }
-          ],
+          ]
         };
 
         myChart.setOption(option);
-        window.addEventListener("resize", function () {
+        myChart.on("click", (params)=>{
+          this.loadproductdesign(this.speclist[params.dataIndex].id);
+        });
+        window.addEventListener("resize", function() {
           myChart.resize();
         });
       }
       this.$on("hook:destroyed", () => {
-        window.removeEventListener("resize", function () {
+        window.removeEventListener("resize", function() {
           myChart.resize();
         });
       });
@@ -570,15 +577,15 @@ export default {
         developprogress: 0,
         testprogress: 0,
         designlist: [],
-        uidesignlist: [],
+        uidesignlist: []
       };
       this.showproductupload = true;
     },
     loadspeclist() {
       HttpHelper.Post("app/speclist", {
         appalias: this.appinfo.alias,
-        appschedule_id: this.info.id,
-      }).then((speclist) => {
+        appschedule_id: this.info.id
+      }).then(speclist => {
         this.speclist = speclist;
         this.loadChartData();
       });
@@ -586,8 +593,8 @@ export default {
     loadproductdesign(vpid) {
       HttpHelper.Post("app/specinfo", {
         appalias: this.appinfo.alias,
-        id: vpid,
-      }).then((ret) => {
+        id: vpid
+      }).then(ret => {
         for (var i = 0; i < ret.designlist.length; i++) {
           ret.designlist[i].url =
             this.uploadpath + "appspec/" + ret.designlist[i].file;
@@ -607,8 +614,8 @@ export default {
       HttpHelper.Post("app/funcupdatebatch", {
         datajson: JSON.stringify(this.funclist),
         appalias: this.appinfo.alias,
-        appschedule_id: this.info.id,
-      }).then((ret) => {
+        appschedule_id: this.info.id
+      }).then(ret => {
         if (ret.code == "0") {
           this.loadfunclist();
           this.funcchangeshow = false;
@@ -619,8 +626,8 @@ export default {
     },
     loadfunclist() {
       HttpHelper.Post("app/funclist", {
-        appschedule_id: this.info.id,
-      }).then((funclist) => {
+        appschedule_id: this.info.id
+      }).then(funclist => {
         this.funclist = funclist;
       });
     },
@@ -643,14 +650,14 @@ export default {
         {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
-          type: "danger",
+          type: "danger"
         }
       ).then(() => {
         HttpHelper.Post("app/deletespec", {
           appalias: this.appinfo.alias,
           appschedule_id: this.info.id,
-          id: this.productdesign.id,
-        }).then((ret) => {
+          id: this.productdesign.id
+        }).then(ret => {
           this.$message("删除成功");
           this.showproductupload = false;
           this.loadspeclist();
@@ -669,19 +676,19 @@ export default {
         json.cover = this.productdesign.uidesignlist[0].file;
       }
 
-      HttpHelper.Post("app/updatespec", json).then((ret) => {
+      HttpHelper.Post("app/updatespec", json).then(ret => {
         if (ret.code == 0) {
           this.$message("新增成功");
 
           HttpHelper.Post("app/specdesignbatch", {
             appalias: this.appinfo.alias,
             appspec_id: ret.return,
-            datajson: JSON.stringify(this.productdesign.designlist),
+            datajson: JSON.stringify(this.productdesign.designlist)
           });
           HttpHelper.Post("app/specuidesignbatch", {
             appalias: this.appinfo.alias,
             appspec_id: ret.return,
-            datajson: JSON.stringify(this.productdesign.uidesignlist),
+            datajson: JSON.stringify(this.productdesign.uidesignlist)
           });
 
           this.showproductupload = false;
@@ -690,12 +697,12 @@ export default {
           this.$message({
             showClose: true,
             message: ret.return,
-            type: "warning",
+            type: "warning"
           });
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>

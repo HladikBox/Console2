@@ -1,7 +1,7 @@
 <template>
   <div class="padding">
     <div v-if="appinfo!=null">
-      <el-tabs :tab-position="'left'">
+      <el-tabs :tab-position="'left'" v-if="modellist.length>0">
         <el-tab-pane label="实体模型设计">
           <div class="padding-left">
             <div class="h3">实体模型设计</div>
@@ -41,8 +41,8 @@ export default {
   props: {
     appinfo: {
       type: Object,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
@@ -50,24 +50,29 @@ export default {
       Inst: {},
       Member: null,
       inittips: "",
+      modellist: []
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
 
-    HttpHelper.Post("content/get", { keycode: "inittips" }).then((content) => {
+    HttpHelper.Post("content/get", { keycode: "inittips" }).then(content => {
       this.inittips = Utils.HtmlDecode(content.content);
     });
   },
   methods: {
     goinit() {
-      this.$alert(this.inittips, "提示", {
-        dangerouslyUseHTMLString: true,
-      }).then(() => {
+      if (this.modellist.length == 0) {
         this.routeto("dev-init");
-      });
-    },
-  },
+      } else {
+        this.$alert(this.inittips, "提示", {
+          dangerouslyUseHTMLString: true
+        }).then(() => {
+          this.routeto("dev-init");
+        });
+      }
+    }
+  }
 };
 </script>
