@@ -18,6 +18,7 @@ import AppSetting from '@/components/AppSetting'
 import AppSpec from '@/components/AppSpec'
 import AppDev from '@/components/AppDev'
 import AppDevInit from '@/components/AppDevInit'
+import AppModel from '@/components/AppModel'
 
 Vue.use(Router)
 
@@ -97,6 +98,16 @@ export default new Router({
           path: 'dev',
           name: 'AppDev',
           component: AppDev
+        },
+        {
+          path: 'model',
+          name: 'AppModel',
+          component: AppModel
+        },
+        {
+          path: 'model/:modelname',
+          name: 'AppModel',
+          component: AppModel
         },
         {
           path: 'setting',
