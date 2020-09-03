@@ -7,7 +7,6 @@
           <el-step title="须知" icon="el-icon-edit"></el-step>
           <el-step title="起始项目" icon="el-icon-edit"></el-step>
           <el-step title="选择组件" icon="el-icon-edit"></el-step>
-          <el-step title="初始化" icon="el-icon-s-grid"></el-step>
           <el-step title="完成初始化" icon="el-icon-success"></el-step>
         </el-steps>
         <div class="padding">
@@ -34,18 +33,32 @@
                 </el-table-column>
               </el-table>
             </div>
+            <div class="margin-top text-center">
+              <el-button round @click="step=1">上一步</el-button>
+            </div>
           </div>
           <div v-if="step==3">
             <div class="h3">系统插件列表</div>
+            <div class="padding">
+              <div class="padding bg-g h7 f-g2">
+                <div v-html="plugintips"></div>
+              </div>
+            </div>
             <div class="margin-top">
-              <el-table :data="pluginlist" style="width: 100%">
-                <el-table-column
-                  type="selection"
-                  width="55">
-                </el-table-column>
+              <el-table
+                :data="pluginlist"
+                style="width: 100%"
+                ref="selectpluginlist"
+                @selection-change="handleSelectionChange"
+              >
+                <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="name" label="名称" width="180"></el-table-column>
                 <el-table-column prop="summary" label="描述"></el-table-column>
               </el-table>
+            </div>
+            <div class="margin-top text-center">
+              <el-button round @click="step=2">上一步</el-button>
+              <el-button round @click="submit" type="primary">提交</el-button>
             </div>
           </div>
         </div>
@@ -76,6 +89,9 @@
           <el-tab-pane label="体验方式" name="second">
             <div class="introductcard" v-html="productinfo.expcontent"></div>
           </el-tab-pane>
+          <el-tab-pane label="迭代日志" name="second">
+            <div class="upgradecontent" v-html="productinfo.upgradecontent"></div>
+          </el-tab-pane>
         </el-tabs>
       </div>
     </el-dialog>
@@ -100,7 +116,7 @@ export default {
       Res: {},
       Inst: {},
       Member: null,
-      step: 3,
+      step: 1,
       initprivacy: "",
       checked: false,
       sysproductlist: [],
@@ -108,7 +124,9 @@ export default {
       showproductinfo: false,
       activeName: "first",
       selectproduct_id: 0,
-      pluginlist:[]
+      pluginlist: [],
+      selectpluginlist: [],
+      plugintips: ""
     };
   },
   created() {
@@ -117,15 +135,54 @@ export default {
     HttpHelper.Post("content/get", { keycode: "initprivacy" }).then(content => {
       this.initprivacy = Utils.HtmlDecode(content.content);
     });
+    HttpHelper.Post("content/get", { keycode: "plugintips" }).then(content => {
+      this.plugintips = Utils.HtmlDecode(content.content);
+    });
 
     HttpHelper.Post("store/productlist", { type: "S" }).then(sysproductlist => {
       this.sysproductlist = sysproductlist;
     });
-    HttpHelper.Post("store/pluginlist", {  }).then(pluginlist => {
+    HttpHelper.Post("store/pluginlist", {}).then(pluginlist => {
       this.pluginlist = pluginlist;
     });
   },
   methods: {
+    handleSelectionChange(val) {
+      this.selectpluginlist = val;
+    },
+    submit() {
+      var plugins = [];
+      for (var item of this.selectpluginlist) {
+        plugins.push(item.id);
+      }
+
+      this.$confirm("是否确定初始化" + this.appinfo.name + "?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        HttpHelper.Post("app/init", {
+          appalias: this.appinfo.alias,
+          product_id: this.selectproduct_id,
+          plugin: plugins.join(",")
+        }).then(ret => {
+          if (ret.code == 0) {
+            this.$alert("初始化成功", "提示", {
+              confirmButtonText: "确定",
+              callback: action => {
+                this.goBack();
+              }
+            });
+          } else {
+            this.$message({
+              showClose: true,
+              message: ret.return,
+              type: "warning"
+            });
+          }
+        });
+      });
+    },
     select(id) {
       this.selectproduct_id = id;
       this.showproductinfo = false;
@@ -137,6 +194,9 @@ export default {
       HttpHelper.Post("store/productinfo", { id: id }).then(productinfo => {
         productinfo.content = Utils.HtmlDecode(productinfo.content);
         productinfo.expcontent = Utils.HtmlDecode(productinfo.expcontent);
+        productinfo.upgradecontent = Utils.HtmlDecode(
+          productinfo.upgradecontent
+        );
         this.productinfo = productinfo;
         this.showproductinfo = true;
       });

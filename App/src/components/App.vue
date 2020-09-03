@@ -12,6 +12,7 @@
               </el-breadcrumb>
             </div>
             <div>
+              <el-button type="success" @click="opendatabase" >访问数据库</el-button>
               <el-button type="primary" v-if="appinfo.devstatus=='A'" @click="startdesign">开始需求设计阶段</el-button>
               <el-button type="primary" v-if="appinfo.devstatus=='B'" @click="startdevelop">开始开发阶段</el-button>
               <el-button type="primary" v-if="appinfo.devstatus=='C'">开始测试阶段</el-button>
@@ -111,6 +112,9 @@ export default {
     });
   },
   methods: {
+    opendatabase(){
+      window.open("http://mysql.app-link.org?autologin=Y&auth_user=yyc"+this.Member.yycno+"_"+this.appinfo.alias+"&auth_pwd="+this.appinfo.dbpassword);
+    },
     startdesign(event) {
       this.$alert(this.startdesigncontent.content, '提示', {
           dangerouslyUseHTMLString: true

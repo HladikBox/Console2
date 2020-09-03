@@ -60,6 +60,9 @@ export default {
     HttpHelper.Post("content/get", { keycode: "inittips" }).then(content => {
       this.inittips = Utils.HtmlDecode(content.content);
     });
+    HttpHelper.Post("app/modellist", { appalias:this.appinfo.alias }).then(modellist => {
+      this.modellist = modellist;
+    });
   },
   methods: {
     goinit() {
