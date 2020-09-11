@@ -105,19 +105,19 @@
               <div class="h3 bolder">字段设计</div>
               <div class="margin-top">
                 <el-table :data="modelinfo.fields.field" style="width: 100%">
-                  <el-table-column p label="字段名称">
+                  <el-table-column p label="字段名称" class="width">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.name"></el-input>
+                      <el-input v-model="scope.row.name"  class="width"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column label="数据库字段">
+                  <el-table-column label="数据库字段"  class="width">
                     <template slot-scope="scope">
-                      <el-input v-model="scope.row.key"></el-input>
+                      <el-input v-model="scope.row.key"  class="width"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column label="字段类型">
+                  <el-table-column label="字段类型"  class="width">
                     <template slot-scope="scope">
-                      <el-select v-model="scope.row.type" placeholder="请选择">
+                      <el-select v-model="scope.row.type" placeholder="请选择"  class="width">
                         <el-option
                           v-for="item in fieldtypelist"
                           :key="item.type"
@@ -125,6 +125,37 @@
                           :value="item.type"
                         ></el-option>
                       </el-select>
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column label="列表显示">
+                    <template slot-scope="scope">
+                      <el-checkbox :value="scope.row.displayinlist=='1'"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="搜索条件">
+                    <template slot-scope="scope">
+                      <el-checkbox :value="scope.row.search=='1'"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="必录字段">
+                    <template slot-scope="scope">
+                      <el-checkbox :value="scope.row.notnull=='1'"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="不可编辑">
+                    <template slot-scope="scope">
+                      <el-checkbox :value="scope.row.readonly=='1'"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="不保存">
+                    <template slot-scope="scope">
+                      <el-checkbox :value="scope.row.nosave=='1'"></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="不显示">
+                    <template slot-scope="scope">
+                      <el-checkbox :value="scope.row.hidden=='1'"></el-checkbox>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -172,7 +203,6 @@ export default {
         { name: "文件上传", type: "upload" },
         { name: "日期", type: "datetime" },
         { name: "表关联下拉", type: "fkey" },
-        { name: "表关联多选", type: "flist" },
         { name: "表关联多选", type: "flist" },
         { name: "网络链接", type: "url" },
         { name: "颜色", type: "color" },
