@@ -71,7 +71,7 @@
         </div>
         <div class="width-1x">创建方式</div>
         <div class="flex-1">
-          <el-select v-model="modelbase" placeholder="请选择">
+          <el-select v-model="modelbase" placeholder="请选择" class="w-100">
             <el-option-group
               v-for="group in modelgrouplist"
               :key="group.method"
@@ -130,6 +130,30 @@ export default {
     HttpHelper.Post("content/get", { keycode: "inittips" }).then((content) => {
       this.inittips = Utils.HtmlDecode(content.content);
     });
+
+    HttpHelper.Post("model/templatelist", { issys: "Y" }).then((modellist) => {
+      if (modellist.length > 0) {
+        var group = {
+          label: "系统模版",
+          options: modellist,
+        };
+        this.modelgrouplist.push(group);
+      }
+
+      HttpHelper.Post("app/modellist", { appalias: this.appinfo.alias }).then(
+        (modellist) => {
+          for (var item of modellist) {
+            item.id = item.modelname;
+          }
+          var group = {
+            label: "当前项目模型",
+            options: modellist,
+          };
+          this.modellist = modellist;
+          this.modelgrouplist.push(group);
+        }
+      );
+    });
   },
   methods: {
     createmodel() {
@@ -145,6 +169,10 @@ export default {
         this.$message({ message: "数据表不能为空", type: "warning" });
         return;
       }
+      if (this.modelbase.trim() == "") {
+        this.$message({ message: "请选择基于哪个模型开始创建", type: "warning" });
+        return;
+      }
       for (var model of this.modellist) {
         if (model.modelname == this.modelname) {
           this.$message({
@@ -154,6 +182,15 @@ export default {
           return;
         }
       }
+      HttpHelper.Post("model/create", {
+        appalias: this.appinfo.alias,
+        modelbase: this.modelbase,
+        modelname: this.modelname,
+        name: this.name,
+        tablename: this.tablename,
+      }).then((ret) => {
+        this.routeto("model/"+this.modelname);
+      });
     },
     addmodel() {
       this.showaddmodel = true;
