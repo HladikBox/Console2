@@ -14,14 +14,14 @@
               <el-table
                 :data="modellist"
                 style="width: 100%"
-                :default-sort="{prop: 'name', order: 'ascending'}"
+                :default-sort="{prop: 'modelname', order: 'ascending'}"
               >
-                <el-table-column prop="modelname" label="模型" sortable></el-table-column>
-                <el-table-column prop="name" label="名称" sortable></el-table-column>
+                <el-table-column prop="modelname" label="模型" width="150" sortable></el-table-column>
+                <el-table-column prop="name" label="名称" width="150" sortable></el-table-column>
                 <el-table-column prop="tablename" label="表名" sortable></el-table-column>
-                <el-table-column prop="description" label="描述" width="400"></el-table-column>
-                <el-table-column prop="createdtime" label="创建时间" sortable></el-table-column>
-                <el-table-column prop="modifiedtime" label="修改时间" sortable></el-table-column>
+                <el-table-column prop="description" label="描述"></el-table-column>
+                <el-table-column prop="createdtime" label="创建时间" width="150" sortable></el-table-column>
+                <el-table-column prop="modifiedtime" label="修改时间" width="150" sortable></el-table-column>
                 <el-table-column label="操作">
                   <template slot-scope="scope">
                     <el-button size="mini" @click="routeto('model/'+scope.row.modelname)">编辑</el-button>
@@ -57,27 +57,33 @@
       <div class="flex-row flex-center">
         <div class="width-1x">模型名称</div>
         <div class="flex-1 margin-right">
-          <el-input v-model="modelname" placeholder="模型名称" maxlength="30"></el-input>
+          <el-input v-model="name" placeholder="模型名称" maxlength="30"></el-input>
         </div>
         <div class="width-1x">模型标识</div>
         <div class="flex-1">
-          <el-input v-model="name" maxlength="30" placeholder="只支持英文和下划线" @input="inputfilter"></el-input>
+          <el-input v-model="modelname" maxlength="30" placeholder="只支持英文和下划线" @input="inputfilter"></el-input>
         </div>
       </div>
       <div class="flex-row flex-center margin-top">
         <div class="width-1x">数据表</div>
         <div class="flex-1 margin-right">
-          <el-input v-model="tablename" placeholder="只支持英文和下划线，建议tb_打头" @input="inputfilter"></el-input>
+          <el-input v-model="tablename" placeholder="只支持英文和下划线，建议tb_打头" @input="inputfilter2"></el-input>
         </div>
         <div class="width-1x">创建方式</div>
         <div class="flex-1">
-          <el-select v-model="modelbase" placeholder="请选择" class="w-100">
-            <el-option
-              v-for="item in sourcemodellist"
-              :key="item.modelname"
-              :label="item.name"
-              :value="item.modelname"
-            ></el-option>
+          <el-select v-model="modelbase" placeholder="请选择">
+            <el-option-group
+              v-for="group in modelgrouplist"
+              :key="group.method"
+              :label="group.label"
+            >
+              <el-option
+                v-for="item in group.options"
+                :key="item.method"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-option-group>
           </el-select>
         </div>
       </div>
@@ -111,8 +117,10 @@ export default {
       modelname: "",
       name: "",
       tablename: "tb_",
-      modelbase: "__sysbase__",
+      modelbase: "",
       sourcemodellist: [],
+      nofileter: false,
+      modelgrouplist: [],
     };
   },
   created() {
@@ -122,26 +130,30 @@ export default {
     HttpHelper.Post("content/get", { keycode: "inittips" }).then((content) => {
       this.inittips = Utils.HtmlDecode(content.content);
     });
-    HttpHelper.Post("app/modellist", { appalias: this.appinfo.alias }).then(
-      (modellist) => {
-        this.modellist = modellist;
-        var options = [];
-        options.push({ modelname: "__sysblank__", name: "空白模型" });
-        options.push({ modelname: "__sysbase__", name: "基础数据模型" });
-        options.push({ modelname: "__sysconfig__", name: "基础单页模型" });
-        for (var item of modellist) {
-          options.push({
-            modelname: item.modelname,
-            name: "复制于" + item.name,
-          });
-        }
-        this.sourcemodellist = options;
-      }
-    );
   },
   methods: {
     createmodel() {
-        
+      if (this.name.trim() == "") {
+        this.$message({ message: "模型名称不能为空", type: "warning" });
+        return;
+      }
+      if (this.modelname.trim() == "") {
+        this.$message({ message: "模型标示不能为空", type: "warning" });
+        return;
+      }
+      if (this.tablename.trim() == "") {
+        this.$message({ message: "数据表不能为空", type: "warning" });
+        return;
+      }
+      for (var model of this.modellist) {
+        if (model.modelname == this.modelname) {
+          this.$message({
+            message: "模型标示已经使用，请选择别的",
+            type: "warning",
+          });
+          return;
+        }
+      }
     },
     addmodel() {
       this.showaddmodel = true;
@@ -156,6 +168,19 @@ export default {
           this.routeto("dev-init");
         });
       }
+    },
+    inputfilter: function (event) {
+      console.log("inputfilter", event);
+      this.modelname = this.modelname.replace(/[\W]/g, "");
+      if (this.nofileter == false) {
+        this.tablename = "tb_" + this.modelname;
+      } else {
+        this.tablename = this.tablename.replace(/[\W]/g, "");
+      }
+    },
+    inputfilter2: function (event) {
+      console.log("inputfilter", event);
+      this.nofileter = true;
     },
   },
 };

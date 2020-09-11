@@ -102,7 +102,7 @@ export default {
       if (this.schedulelist.length > 0) {
         this.info = this.schedulelist[0];
         this.setCalendarEvent();
-        this.loadRightGroup();
+        //this.loadRightGroup();
       }
     });
   },
