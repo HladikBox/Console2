@@ -1,7 +1,15 @@
 <template>
   <div class="padding">
     <div v-if="appinfo!=null&&modelinfo!=null">
-      <el-page-header @back="goBack" :content="modelinfo.name"></el-page-header>
+      <div class="flex-row">
+        <div class="flex-1">
+          <el-page-header @back="goBack" :content="modelinfo.name"></el-page-header>
+        </div>
+        <div>
+          <el-button type="success" @click="updatedb">更新数据库</el-button>
+          <el-button type="primary" @click="savemodel">保存模型</el-button>
+        </div>
+      </div>
       <el-tabs v-model="activeName" :tab-position="'left'" class="margin-top">
         <el-tab-pane label="基础设计" name="基础设计">
           <div class="padding-left">
@@ -110,7 +118,7 @@
               </div>
               <div class="margin-top">
                 <el-table :data="modelinfo.fields.field" style="width: 100%" class="fieldtable">
-                  <el-table-column p label="字段名称" class="width" fixed>
+                  <el-table-column label="字段名称" class="width" fixed>
                     <template slot-scope="scope">
                       <el-input size="small" v-model="scope.row.name" class="width-1x"></el-input>
                     </template>
@@ -223,8 +231,180 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="服务设计" name="服务设计"></el-tab-pane>
-        <el-tab-pane label="图表设计" name="图表设计"></el-tab-pane>
+        <el-tab-pane label="服务设计" name="服务设计">
+          <div class="padding-left">
+            <div class="containter">
+              <div class="flex-row flex-center">
+                <div class="h3 bolder margin-right">服务设计</div>
+                <div>
+                  <i class="el-icon-circle-plus h3 f-p pointer" @click="addnewservice"></i>
+                </div>
+              </div>
+              <div class="margin-top">
+                <el-table :data="modelinfo.options.option" style="width: 100%" class="fieldtable">
+                  <el-table-column label="服务名称">
+                    <template slot-scope="scope">
+                      <el-input size="small" v-model="scope.row.name"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="服务类型">
+                    <template slot-scope="scope">
+                      <el-select size="small" v-model="scope.row.type" placeholder="请选择">
+                        <el-option
+                          v-for="item in optiontypelist"
+                          :key="item.type"
+                          :label="item.name"
+                          :value="item.type"
+                        ></el-option>
+                      </el-select>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="自定义内容" width="400">
+                    <template slot-scope="scope">
+                      <el-input type="textarea" size="small" v-model="scope.row.function"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="详情页显示">
+                    <template slot-scope="scope">
+                      <el-checkbox
+                        :value="scope.row.detail==1"
+                        @change="scope.row.detail=(scope.row.detail==1)?0:1"
+                      ></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="列表页显示">
+                    <template slot-scope="scope">
+                      <el-checkbox
+                        :value="scope.row.search==1"
+                        @change="scope.row.search=(scope.row.search==1)?0:1"
+                      ></el-checkbox>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="服务描述" width="400">
+                    <template slot-scope="scope">
+                      <el-input
+                        type="textarea"
+                        placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用"
+                        size="small"
+                        v-model="scope.row.description"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="图表设计" name="图表设计">
+          <div class="padding-left">
+            <div class="containter">
+              <div class="flex-row flex-center">
+                <div class="h3 bolder margin-right">图表设计</div>
+                <div>
+                  <i class="el-icon-circle-plus h3 f-p pointer" @click="addnewcharts"></i>
+                  <i class="el-icon-question h3 pointer"></i>
+                </div>
+              </div>
+              <div class="margin-top">
+                <el-table :data="modelinfo.charts.chart" style="width: 100%" class="fieldtable">
+                  <el-table-column label="图表名称">
+                    <template slot-scope="scope">
+                      <el-input size="small" v-model="scope.row.name"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="图表类型">
+                    <template slot-scope="scope">
+                      <el-select size="small" v-model="scope.row.type" placeholder="请选择">
+                        <el-option
+                          v-for="item in charttypelist"
+                          :key="item.type"
+                          :label="item.name"
+                          :value="item.type"
+                        ></el-option>
+                      </el-select>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="字段设置">
+                    <template slot-scope="scope">
+                      <div class="flex-row flex-center">
+                        <div class="width-1x">常规字段</div>
+                        <div>
+                          <el-select size="small" v-model="scope.row.field" placeholder="请选择">
+                            <el-option
+                              v-for="item in modelinfo.fields.field"
+                              :key="item.key"
+                              :label="item.name"
+                              :value="item.key"
+                            ></el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div class="flex-row flex-center margin-top">
+                        <div class="width-1x">日期字段</div>
+                        <div>
+                          <el-select
+                            size="small"
+                            v-model="scope.row.datetimefield"
+                            placeholder="请选择"
+                          >
+                            <template v-for="item in modelinfo.fields.field">
+                              <el-option
+                                v-if="item.type=='datetime'"
+                                :key="item.key"
+                                :label="item.name"
+                                :value="item.key"
+                              ></el-option>
+                            </template>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div class="flex-row flex-center margin-top">
+                        <div class="width-1x">隔离字段</div>
+                        <div>
+                          <el-select size="small" v-model="scope.row.statusfield" placeholder="请选择">
+                            <template v-for="item in modelinfo.fields.field">
+                              <el-option
+                                v-if="item.type=='select'||item.type=='fkey'"
+                                :key="item.key"
+                                :label="item.name"
+                                :value="item.key"
+                              ></el-option>
+                            </template>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div class="flex-row flex-center margin-top">
+                        <div class="width-1x">数值字段</div>
+                        <div>
+                          <el-select size="small" v-model="scope.row.numberfield" placeholder="请选择">
+                            <template v-for="item in modelinfo.fields.field">
+                              <el-option
+                                v-if="item.type=='number'"
+                                :key="item.key"
+                                :label="item.name"
+                                :value="item.key"
+                              ></el-option>
+                            </template>
+                          </el-select>
+                        </div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="描述" width="400">
+                    <template slot-scope="scope">
+                      <el-input
+                        type="textarea"
+                        placeholder="本字段的相关描述，防止以后忘记这个字段干嘛用"
+                        size="small"
+                        v-model="scope.row.description"
+                      ></el-input>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="前端JS" name="前端JS"></el-tab-pane>
         <el-tab-pane label="后台PHP" name="后台PHP"></el-tab-pane>
         <el-tab-pane label="CSS" name="CSS"></el-tab-pane>
@@ -239,17 +419,23 @@
     >
       <div class="padding">
         <div class="flex-row flex-center">
-          <div class="width-1x"><span class="f-d">*</span>字段名称</div>
+          <div class="width-1x">
+            <span class="f-d">*</span>字段名称
+          </div>
           <div class="flex-1 margin-right">
             <el-input class="w-100" v-model="fieldinfo.name"></el-input>
           </div>
-          <div class="width-1x"><span class="f-d">*</span>数据库名称</div>
+          <div class="width-1x">
+            <span class="f-d">*</span>数据库名称
+          </div>
           <div class="flex-1 margin-right">
             <el-input class="w-100" v-model="fieldinfo.key"></el-input>
           </div>
         </div>
         <div class="flex-row flex-center margin-top">
-          <div class="width-1x"><span class="f-d">*</span>字段类型</div>
+          <div class="width-1x">
+            <span class="f-d">*</span>字段类型
+          </div>
           <div class="flex-1 margin-right">
             <el-select placeholder="请选择" class="w-100" v-model="fieldinfo.type">
               <el-option
@@ -671,12 +857,24 @@ export default {
       showproductinfo: false,
       modelname: "",
       modelinfo: null,
-      activeName: "字段设计",
+      activeName: "图表设计",
       showfieldedit: false,
       fieldchangeseq: -1,
       fieldinfo: {},
       modellist: [],
       selectmodellist: [],
+      charttypelist: [
+        { name: "时间数值折线图报表", type: "timeline" },
+        { name: "时间数值柱状图报表", type: "timecolumn" },
+        { name: "柱状比较图报表", type: "column" },
+        { name: "饼状分析报表", type: "pie" },
+      ],
+      optiontypelist: [
+        { name: "新增", type: "addnew" },
+        { name: "删除", type: "delete" },
+        { name: "自定义JS方法", type: "function" },
+        { name: "自定义超链接", type: "link" },
+      ],
       fieldtypelist: [
         { name: "文本", type: "text" },
         { name: "密码", type: "password" },
@@ -743,7 +941,11 @@ export default {
       if (this.fieldchangeseq == -1) {
         this.modelinfo.fields.field.push(this.fieldinfo);
       } else {
-        this.$set(this.modelinfo.fields.field,this.fieldchangeseq, this.fieldinfo)
+        this.$set(
+          this.modelinfo.fields.field,
+          this.fieldchangeseq,
+          this.fieldinfo
+        );
       }
       this.showfieldedit = false;
     },
@@ -757,16 +959,16 @@ export default {
         name: "",
         key: "",
         type: "",
-        description:"",
-        displayinlist:0,
-        search:0,
-        notnull:0,
-        disableindetail:0,
-        nosave:0,
-        hidden:0,
-        canedit:0,
-        unique:0,
-        unionunique:0,
+        description: "",
+        displayinlist: 0,
+        search: 0,
+        notnull: 0,
+        disableindetail: 0,
+        nosave: 0,
+        hidden: 0,
+        canedit: 0,
+        unique: 0,
+        unionunique: 0,
         format: "",
         default: "",
         strict: 0,
@@ -811,6 +1013,38 @@ export default {
     },
     addselectoption() {
       this.fieldinfo.options.option.push({ name: "", value: "", color: "" });
+    },
+    addnewservice() {
+      this.modelinfo.options.option.push({
+        name: "",
+        type: "",
+        function: "",
+        detail: 0,
+        search: 0,
+        description: "",
+      });
+    },
+    addnewcharts() {
+      if (this.modelinfo.charts.chart == "") {
+        this.modelinfo.charts.chart = [];
+      }
+      this.modelinfo.charts.chart.push({
+        name: "",
+        type: "",
+        field: "",
+        datetimefield: "",
+        numberfield: "",
+        statusfield: "",
+        description: "",
+      });
+    },
+    savemodel() {
+      HttpHelper.Post("model/info", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname,
+      }).then((modelinfo) => {
+        this.modelinfo = modelinfo;
+      });
     },
   },
 };
