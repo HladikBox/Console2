@@ -6,8 +6,9 @@
           <el-page-header @back="goBack" :content="modelinfo.name"></el-page-header>
         </div>
         <div>
-          <el-button type="success" @click="updatedb">更新数据库</el-button>
-          <el-button type="primary" @click="savemodel">保存模型</el-button>
+          <el-button type="success" @click="updatedb">只更新数据结构</el-button>
+          <el-button type="info" @click="savemodel(false)">只保存模型</el-button>
+          <el-button type="primary" @click="savemodel(true)">保存模型并更新数据结构</el-button>
         </div>
       </div>
       <el-tabs v-model="activeName" :tab-position="'left'" class="margin-top">
@@ -405,7 +406,9 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="前端JS" name="前端JS"></el-tab-pane>
+        <el-tab-pane label="前端JS" name="前端JS">
+          
+        </el-tab-pane>
         <el-tab-pane label="后台PHP" name="后台PHP"></el-tab-pane>
         <el-tab-pane label="CSS" name="CSS"></el-tab-pane>
       </el-tabs>
@@ -857,7 +860,7 @@ export default {
       showproductinfo: false,
       modelname: "",
       modelinfo: null,
-      activeName: "图表设计",
+      activeName: "前端JS",
       showfieldedit: false,
       fieldchangeseq: -1,
       fieldinfo: {},
@@ -1038,12 +1041,41 @@ export default {
         description: "",
       });
     },
-    savemodel() {
-      HttpHelper.Post("model/info", {
+    savemodel(alsoupdate=false) {
+      HttpHelper.Post("model/save", {
         appalias: this.appinfo.alias,
         modelname: this.modelname,
-      }).then((modelinfo) => {
-        this.modelinfo = modelinfo;
+        model: JSON.stringify(this.modelinfo),
+      }).then((ret) => {
+        this.$message({
+          message: "保存成功",
+          type: "success",
+        });
+        if(alsoupdate==true){
+          this.updatedb();
+        }
+      });
+    },
+    updatedb() {
+      HttpHelper.Post("model/updatedb", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname,
+      }).then((data) => {
+        if (data.code == 0) {
+          this.$message({
+            message: "数据库更新成功",
+            type: "success",
+          });
+        } else {
+          var ret = "";
+          for (var i = 0; i < data.return.length; i++) {
+            ret += "<p>" + data.return[i] + "</p>";
+          }
+          this.$alert(ret, "HTML 片段", {
+            dangerouslyUseHTMLString: true,
+            type: "error",
+          });
+        }
       });
     },
   },
