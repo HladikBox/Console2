@@ -5,10 +5,13 @@
         <div class="flex-1">
           <el-page-header @back="goBack" :content="modelinfo.name"></el-page-header>
         </div>
-        <div>
+        <div v-if="activeName=='基础设计'||activeName=='字段设计'||activeName=='服务设计'||activeName=='图表设计'">
           <el-button type="success" @click="updatedb">只更新数据结构</el-button>
           <el-button type="info" @click="savemodel(false)">只保存模型</el-button>
           <el-button type="primary" @click="savemodel(true)">保存模型并更新数据结构</el-button>
+        </div>
+        <div v-else>
+          <el-button type="success" style="opacity:0">只更新数据结构</el-button>
         </div>
       </div>
       <el-tabs v-model="activeName" :tab-position="'left'" class="margin-top">
@@ -119,6 +122,18 @@
               </div>
               <div class="margin-top">
                 <el-table :data="modelinfo.fields.field" style="width: 100%" class="fieldtable">
+                  <el-table-column label class="width-1x" fixed>
+                    <template slot-scope="scope">
+                      <i
+                        :data-position="scope.$index"
+                        class="el-icon-sort h3 f-p pointer"
+                        draggable="true"
+                        @dragstart="fielddrag"
+                        @drop="fielddrop"
+                        @dragover="allowDrop"
+                      ></i>
+                    </template>
+                  </el-table-column>
                   <el-table-column label="字段名称" class="width" fixed>
                     <template slot-scope="scope">
                       <el-input size="small" v-model="scope.row.name" class="width-1x"></el-input>
@@ -222,6 +237,7 @@
                   <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
                       <el-button @click="editfield(scope)" type="text" size="small">编辑</el-button>
+                      <el-button @click="deletefield(scope)" type="text" class="f-d" size="small">删除</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -243,12 +259,25 @@
               </div>
               <div class="margin-top">
                 <el-table :data="modelinfo.options.option" style="width: 100%" class="fieldtable">
-                  <el-table-column label="服务名称">
+                  <el-table-column label class="width-1x" fixed>
+                    <template slot-scope="scope">
+                      <i
+                        :data-position="scope.$index"
+                        class="el-icon-sort h3 f-p pointer"
+                        draggable="true"
+                        @dragstart="fielddrag"
+                        @drop="optiondrop"
+                        @dragover="allowDrop"
+                      ></i>
+                    </template>
+                  </el-table-column>
+
+                  <el-table-column label="服务名称" fixed>
                     <template slot-scope="scope">
                       <el-input size="small" v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
-                  <el-table-column label="服务类型">
+                  <el-table-column label="服务类型" fixed>
                     <template slot-scope="scope">
                       <el-select size="small" v-model="scope.row.type" placeholder="请选择">
                         <el-option
@@ -291,6 +320,11 @@
                       ></el-input>
                     </template>
                   </el-table-column>
+                  <el-table-column fixed="right" label="操作" width="100">
+                    <template slot-scope="scope">
+                      <el-button @click="deleteoption(scope)" type="text" class="f-d" size="small">删除</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
             </div>
@@ -308,8 +342,20 @@
               </div>
               <div class="margin-top">
                 <el-table :data="modelinfo.charts.chart" style="width: 100%" class="fieldtable">
-                  <el-table-column label="图表名称">
+                  <el-table-column label class="width-1x" fixed>
                     <template slot-scope="scope">
+                      <i
+                        :data-position="scope.$index"
+                        class="el-icon-sort h3 f-p pointer"
+                        draggable="true"
+                        @dragstart="fielddrag"
+                        @drop="chartdrop"
+                        @dragover="allowDrop"
+                      ></i>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="图表名称"  fixed>
+                    <template slot-scope="scope" >
                       <el-input size="small" v-model="scope.row.name"></el-input>
                     </template>
                   </el-table-column>
@@ -325,7 +371,7 @@
                       </el-select>
                     </template>
                   </el-table-column>
-                  <el-table-column label="字段设置">
+                  <el-table-column label="字段设置"  fixed>
                     <template slot-scope="scope">
                       <div class="flex-row flex-center">
                         <div class="width-1x">常规字段</div>
@@ -401,16 +447,85 @@
                       ></el-input>
                     </template>
                   </el-table-column>
+                  <el-table-column fixed="right" label="操作" width="100">
+                    <template slot-scope="scope">
+                      <el-button @click="deletechart(scope)" type="text" class="f-d" size="small">删除</el-button>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </div>
             </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="前端JS" name="前端JS">
-          
+          <div class="padding-left">
+            <div class="containter">
+              <div class="flex-row flex-center">
+                <div class="h3 bolder margin-right">前端JS</div>
+                <div>
+                  <i class="el-icon-refresh h3 f-p pointer" @click="refreshjs"></i>
+                </div>
+              </div>
+              <div class="margin-top">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 20}"
+                  placeholder="请输入代码"
+                  v-model="jscontent"
+                ></el-input>
+              </div>
+              <div class="margin-top">
+                <el-button type="primary" @click="savejs">保存</el-button>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
-        <el-tab-pane label="后台PHP" name="后台PHP"></el-tab-pane>
-        <el-tab-pane label="CSS" name="CSS"></el-tab-pane>
+        <el-tab-pane label="后台PHP" name="后台PHP">
+          <div class="padding-left">
+            <div class="containter">
+              <div class="flex-row flex-center">
+                <div class="h3 bolder margin-right">后台PHP</div>
+                <div>
+                  <i class="el-icon-refresh h3 f-p pointer" @click="refreshphp"></i>
+                </div>
+              </div>
+              <div class="margin-top">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 20}"
+                  placeholder="请输入代码"
+                  v-model="phpcontent"
+                ></el-input>
+              </div>
+              <div class="margin-top">
+                <el-button type="primary" @click="savephp">保存</el-button>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane label="CSS" name="CSS">
+          <div class="padding-left">
+            <div class="containter">
+              <div class="flex-row flex-center">
+                <div class="h3 bolder margin-right">CSS</div>
+                <div>
+                  <i class="el-icon-refresh h3 f-p pointer" @click="refreshcss"></i>
+                </div>
+              </div>
+              <div class="margin-top">
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 20}"
+                  placeholder="请输入代码"
+                  v-model="csscontent"
+                ></el-input>
+              </div>
+              <div class="margin-top">
+                <el-button type="primary" @click="savecss">保存</el-button>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
     <el-dialog
@@ -849,8 +964,8 @@ export default {
   props: {
     appinfo: {
       type: Object,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
@@ -860,7 +975,7 @@ export default {
       showproductinfo: false,
       modelname: "",
       modelinfo: null,
-      activeName: "前端JS",
+      activeName: "基础设计",
       showfieldedit: false,
       fieldchangeseq: -1,
       fieldinfo: {},
@@ -870,13 +985,13 @@ export default {
         { name: "时间数值折线图报表", type: "timeline" },
         { name: "时间数值柱状图报表", type: "timecolumn" },
         { name: "柱状比较图报表", type: "column" },
-        { name: "饼状分析报表", type: "pie" },
+        { name: "饼状分析报表", type: "pie" }
       ],
       optiontypelist: [
         { name: "新增", type: "addnew" },
         { name: "删除", type: "delete" },
         { name: "自定义JS方法", type: "function" },
-        { name: "自定义超链接", type: "link" },
+        { name: "自定义超链接", type: "link" }
       ],
       fieldtypelist: [
         { name: "文本", type: "text" },
@@ -892,34 +1007,88 @@ export default {
         { name: "颜色", type: "color" },
         { name: "下级数据", type: "grid" },
         { name: "长文本", type: "longtext" },
-        { name: "HTML编辑", type: "html" },
+        { name: "HTML编辑", type: "html" }
       ],
       urlfiletypelist: [
         { name: "图片", type: "image" },
         { name: "视频", type: "video" },
         { name: "音频", type: "audio" },
         { name: "下载文件", type: "file" },
-        { name: "网页", type: "web" },
+        { name: "网页", type: "web" }
       ],
-      uploadmodule: this.modelname,
+      jscontent: "",
+      csscontent: "",
+      phpcontent: ""
     };
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
     this.modelname = this.$route.params.modelname;
+    this.refreshjs();
+    this.refreshcss();
+    this.refreshphp();
     HttpHelper.Post("model/info", {
       appalias: this.appinfo.alias,
-      modelname: this.modelname,
-    }).then((modelinfo) => {
+      modelname: this.modelname
+    }).then(modelinfo => {
       this.modelinfo = modelinfo;
     });
     this.loadModelList();
   },
   methods: {
+    chartdrop(ev) {
+      console.log("fielddrop", ev);
+      ev.preventDefault();
+      var old = ev.dataTransfer.getData("Text");
+      var cur = ev.target.dataset.position;
+      var trow = this.modelinfo.charts.chart[cur];
+      this.$set(
+        this.modelinfo.charts.chart,
+        cur,
+        this.modelinfo.charts.chart[old]
+      );
+
+      this.$set(this.modelinfo.charts.chart, old, trow);
+    },
+    optiondrop(ev) {
+      console.log("fielddrop", ev);
+      ev.preventDefault();
+      var old = ev.dataTransfer.getData("Text");
+      var cur = ev.target.dataset.position;
+      var trow = this.modelinfo.options.option[cur];
+      this.$set(
+        this.modelinfo.options.option,
+        cur,
+        this.modelinfo.options.option[old]
+      );
+
+      this.$set(this.modelinfo.options.option, old, trow);
+    },
+    fielddrop(ev) {
+      console.log("fielddrop", ev);
+      ev.preventDefault();
+      var old = ev.dataTransfer.getData("Text");
+      var cur = ev.target.dataset.position;
+      var trow = this.modelinfo.fields.field[cur];
+      this.$set(
+        this.modelinfo.fields.field,
+        cur,
+        this.modelinfo.fields.field[old]
+      );
+
+      this.$set(this.modelinfo.fields.field, old, trow);
+    },
+    fielddrag(ev) {
+      console.log("fielddrag", ev, ev.target.dataset.position);
+      ev.dataTransfer.setData("Text", ev.target.dataset.position);
+    },
+    allowDrop(ev) {
+      ev.preventDefault();
+    },
     loadModelList() {
       HttpHelper.Post("app/modellist", { appalias: this.appinfo.alias }).then(
-        (modellist) => {
+        modellist => {
           this.modellist = modellist;
           var selectmodellist = [];
           for (var i = 0; i < this.modellist.length; i++) {
@@ -982,8 +1151,8 @@ export default {
         options: {
           option: [
             { name: "", value: "", color: "" },
-            { name: "", value: "", color: "" },
-          ],
+            { name: "", value: "", color: "" }
+          ]
         },
         isdecimal: 0,
         maxvalue: "",
@@ -1000,6 +1169,7 @@ export default {
         ajax: 0,
         showview: 0,
         viewmodel: "",
+        uploadmodule: this.modelname
       };
     },
     editfield(scope) {
@@ -1014,6 +1184,66 @@ export default {
       console.log("fieldinfo", this.fieldinfo);
       this.showfieldedit = true;
     },
+    savejs() {
+      HttpHelper.Post("model/savejscontent", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname,
+        content: this.jscontent
+      }).then(ret => {
+        this.$message({
+          message: "保存成功",
+          type: "success"
+        });
+      });
+    },
+    savecss() {
+      HttpHelper.Post("model/savecsscontent", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname,
+        content: this.csscontent
+      }).then(ret => {
+        this.$message({
+          message: "保存成功",
+          type: "success"
+        });
+      });
+    },
+    savephp() {
+      HttpHelper.Post("model/savephpcontent", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname,
+        content: this.phpcontent
+      }).then(ret => {
+        this.$message({
+          message: "保存成功",
+          type: "success"
+        });
+      });
+    },
+    refreshjs() {
+      HttpHelper.Post("model/loadjscontent", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname
+      }).then(ret => {
+        this.jscontent = ret.return;
+      });
+    },
+    refreshcss() {
+      HttpHelper.Post("model/loadcsscontent", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname
+      }).then(ret => {
+        this.csscontent = ret.return;
+      });
+    },
+    refreshphp() {
+      HttpHelper.Post("model/loadphpcontent", {
+        appalias: this.appinfo.alias,
+        modelname: this.modelname
+      }).then(ret => {
+        this.phpcontent = ret.return;
+      });
+    },
     addselectoption() {
       this.fieldinfo.options.option.push({ name: "", value: "", color: "" });
     },
@@ -1024,7 +1254,7 @@ export default {
         function: "",
         detail: 0,
         search: 0,
-        description: "",
+        description: ""
       });
     },
     addnewcharts() {
@@ -1038,33 +1268,45 @@ export default {
         datetimefield: "",
         numberfield: "",
         statusfield: "",
-        description: "",
+        description: ""
       });
     },
-    savemodel(alsoupdate=false) {
+    savemodel(alsoupdate = false) {
       HttpHelper.Post("model/save", {
         appalias: this.appinfo.alias,
         modelname: this.modelname,
-        model: JSON.stringify(this.modelinfo),
-      }).then((ret) => {
+        model: JSON.stringify(this.modelinfo)
+      }).then(ret => {
         this.$message({
           message: "保存成功",
-          type: "success",
+          type: "success"
         });
-        if(alsoupdate==true){
+        if (alsoupdate == true) {
           this.updatedb();
         }
       });
     },
+    deleteoption(scope) {
+      var idx = scope.$index;
+      this.modelinfo.options.option.splice(idx, 1);
+    },
+    deletechart(scope) {
+      var idx = scope.$index;
+      this.modelinfo.charts.chart.splice(idx, 1);
+    },
+    deletefield(scope) {
+      var idx = scope.$index;
+      this.modelinfo.fields.field.splice(idx, 1);
+    },
     updatedb() {
       HttpHelper.Post("model/updatedb", {
         appalias: this.appinfo.alias,
-        modelname: this.modelname,
-      }).then((data) => {
+        modelname: this.modelname
+      }).then(data => {
         if (data.code == 0) {
           this.$message({
             message: "数据库更新成功",
-            type: "success",
+            type: "success"
           });
         } else {
           var ret = "";
@@ -1073,12 +1315,12 @@ export default {
           }
           this.$alert(ret, "HTML 片段", {
             dangerouslyUseHTMLString: true,
-            type: "error",
+            type: "error"
           });
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 <style scoped>
