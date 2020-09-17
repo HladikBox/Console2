@@ -1,7 +1,7 @@
 <template>
   <div class="padding">
     <div v-if="appinfo!=null">
-      <el-tabs :tab-position="'left'">
+      <el-tabs v-model="activeName" :tab-position="'left'">
         <el-tab-pane label="开发组管理">
           <div class="padding-left">
             <div class="h3">开发组成员</div>
@@ -30,6 +30,7 @@ export default {
       Res: {},
       Inst: {},
       Member: null,
+      activeName: "开发组成员",
     };
   },
   created() {

@@ -34,7 +34,9 @@
         <el-tab-pane label="后台菜单设计">
           <div class="padding-left">
             <div class="h3">后台菜单设计</div>
-            <div class="margin-top-4x"></div>
+            <div class="margin-top-4x">
+              <AppDevMenu :appinfo="appinfo" ></AppDevMenu>
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="数据接口设计">
@@ -98,6 +100,7 @@ import Config from "../Config";
 import { PageHelper } from "../PageHelper";
 import { HttpHelper } from "../HttpHelper";
 import { Utils } from "../Utils";
+import AppDevMenu from "./AppDevMenu"
 
 export default {
   props: {
@@ -122,6 +125,9 @@ export default {
       nofileter: false,
       modelgrouplist: [],
     };
+  },
+  components:{
+    "AppDevMenu":AppDevMenu
   },
   created() {
     PageHelper.Init(this);
