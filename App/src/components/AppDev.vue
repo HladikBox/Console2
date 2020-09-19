@@ -35,14 +35,16 @@
           <div class="padding-left">
             <div class="h3">后台菜单设计</div>
             <div class="margin-top-4x">
-              <AppDevMenu :appinfo="appinfo" ></AppDevMenu>
+              <AppDevMenu :appinfo="appinfo"></AppDevMenu>
             </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="数据接口设计">
           <div class="padding-left">
             <div class="h3">数据接口设计</div>
-            <div class="margin-top-4x"></div>
+            <div class="margin-top-4x">
+              <AppDevApi :appinfo="appinfo"></AppDevApi>
+            </div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="版本管理">
@@ -100,14 +102,15 @@ import Config from "../Config";
 import { PageHelper } from "../PageHelper";
 import { HttpHelper } from "../HttpHelper";
 import { Utils } from "../Utils";
-import AppDevMenu from "./AppDevMenu"
+import AppDevMenu from "./AppDevMenu";
+import AppDevApi from "./AppDevApi";
 
 export default {
   props: {
     appinfo: {
       type: Object,
-      default: null,
-    },
+      default: null
+    }
   },
   data() {
     return {
@@ -123,37 +126,38 @@ export default {
       modelbase: "",
       sourcemodellist: [],
       nofileter: false,
-      modelgrouplist: [],
+      modelgrouplist: []
     };
   },
-  components:{
-    "AppDevMenu":AppDevMenu
+  components: {
+    AppDevMenu: AppDevMenu,
+    AppDevApi: AppDevApi
   },
   created() {
     PageHelper.Init(this);
     PageHelper.LoginAuth(this);
 
-    HttpHelper.Post("content/get", { keycode: "inittips" }).then((content) => {
+    HttpHelper.Post("content/get", { keycode: "inittips" }).then(content => {
       this.inittips = Utils.HtmlDecode(content.content);
     });
 
-    HttpHelper.Post("model/templatelist", { issys: "Y" }).then((modellist) => {
+    HttpHelper.Post("model/templatelist", { issys: "Y" }).then(modellist => {
       if (modellist.length > 0) {
         var group = {
           label: "系统模版",
-          options: modellist,
+          options: modellist
         };
         this.modelgrouplist.push(group);
       }
 
       HttpHelper.Post("app/modellist", { appalias: this.appinfo.alias }).then(
-        (modellist) => {
+        modellist => {
           for (var item of modellist) {
             item.id = item.modelname;
           }
           var group = {
             label: "当前项目模型",
-            options: modellist,
+            options: modellist
           };
           this.modellist = modellist;
           this.modelgrouplist.push(group);
@@ -176,14 +180,17 @@ export default {
         return;
       }
       if (this.modelbase.trim() == "") {
-        this.$message({ message: "请选择基于哪个模型开始创建", type: "warning" });
+        this.$message({
+          message: "请选择基于哪个模型开始创建",
+          type: "warning"
+        });
         return;
       }
       for (var model of this.modellist) {
         if (model.modelname == this.modelname) {
           this.$message({
             message: "模型标示已经使用，请选择别的",
-            type: "warning",
+            type: "warning"
           });
           return;
         }
@@ -193,9 +200,9 @@ export default {
         modelbase: this.modelbase,
         modelname: this.modelname,
         name: this.name,
-        tablename: this.tablename,
-      }).then((ret) => {
-        this.routeto("model/"+this.modelname);
+        tablename: this.tablename
+      }).then(ret => {
+        this.routeto("model/" + this.modelname);
       });
     },
     addmodel() {
@@ -206,13 +213,13 @@ export default {
         this.routeto("dev-init");
       } else {
         this.$alert(this.inittips, "提示", {
-          dangerouslyUseHTMLString: true,
+          dangerouslyUseHTMLString: true
         }).then(() => {
           this.routeto("dev-init");
         });
       }
     },
-    inputfilter: function (event) {
+    inputfilter: function(event) {
       console.log("inputfilter", event);
       this.modelname = this.modelname.replace(/[\W]/g, "");
       if (this.nofileter == false) {
@@ -221,10 +228,10 @@ export default {
         this.tablename = this.tablename.replace(/[\W]/g, "");
       }
     },
-    inputfilter2: function (event) {
+    inputfilter2: function(event) {
       console.log("inputfilter", event);
       this.nofileter = true;
-    },
-  },
+    }
+  }
 };
 </script>

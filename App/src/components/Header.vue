@@ -11,8 +11,8 @@
         <div class="flex-1"></div>
         <el-link :underline="false" class="padding-right f-w" @click="home">主页</el-link>
         <el-link :underline="false" class="padding-right f-w" @click="routeto('/management')">管理中心</el-link>
-        <el-link :underline="false" class="padding-right f-w">文档中心</el-link>
-        <el-link :underline="false" class="padding-right f-w">产品定价</el-link>
+        <el-link :underline="false" class="padding-right f-w" >文档中心</el-link>
+        <el-link :underline="false" class="padding-right f-w" @click="routeto('/pricelist')">产品定价</el-link>
         <div>
           <el-input size="mini" prefix-icon="el-icon-search" placeholder="搜索" v-model="search"></el-input>
         </div>

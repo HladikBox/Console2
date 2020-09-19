@@ -396,6 +396,9 @@ div{
 .f-p{
   color:#409EFF ;
 }
+.f-s{
+  color:#67C23A ;
+}
 .f-d{
   color:#F56C6C ;
 }

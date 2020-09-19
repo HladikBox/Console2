@@ -19,6 +19,7 @@ import AppSpec from '@/components/AppSpec'
 import AppDev from '@/components/AppDev'
 import AppDevInit from '@/components/AppDevInit'
 import AppModel from '@/components/AppModel'
+import PriceList from '@/components/PriceList'
 
 Vue.use(Router)
 
@@ -38,6 +39,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/pricelist',
+      name: 'PriceList',
+      component: PriceList
     },
     {
       path: '/passwordreset',
