@@ -94,7 +94,6 @@ export default {
   },
   created() {
     PageHelper.Init(this);
-    PageHelper.LoginAuth(this);
 
     HttpHelper.Post("inst/pricelist", {}).then(pricelist => {
       this.pricelist = pricelist;

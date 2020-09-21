@@ -131,6 +131,9 @@ div{
   flex: 1;
 }
 
+.flex-2 {
+  flex: 2;
+}
 
 .text-center {
   text-align: center;
