@@ -46,7 +46,7 @@
               <span>研发工作区</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="5">
+          <el-menu-item index="AppTest"  @click="routeto('/app/'+appinfo.alias+'/test')">
             <template slot="title">
               <i class="el-icon-monitor"></i>
               <span>测试</span>

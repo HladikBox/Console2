@@ -16,6 +16,8 @@
   </div>
 </template>
 <script>
+import Config from "../Config";
+import { PageHelper } from "../PageHelper";
 import { HttpHelper } from "../HttpHelper";
 import { Utils } from "../Utils";
 
@@ -28,6 +30,8 @@ export default {
   },
   data() {
     return {
+      Res: {},
+      Inst: {},
       menu: [],
       versionlist: [],
     };
@@ -44,8 +48,40 @@ export default {
         }
       );
     },
-    download(row){
-      window.open(this.uploadpath+'version/'+row.version);
+    rollback(row) {
+      this.$confirm("此操作将回滚代码, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(() => {
+        HttpHelper.Post("app/createversion", {
+          appalias: this.appinfo.alias,
+          remarks: "自动备份",
+        }).then(() => {
+          this.loadVersionList();
+          HttpHelper.Post("app/rollbackversion", {
+            appalias: this.appinfo.alias,
+            version_id: row.id,
+          }).then(() => {
+            this.$alert("回滚成功，点击确定重新加载", "提示", {
+              confirmButtonText: "确定",
+              callback: (action) => {
+                window.location.reload();
+              },
+            });
+          });
+        });
+      });
+    },
+    download(row) {
+      var s = row.versiondate_formatting;
+      s = s.replace(/ /g, "");
+      s = s.replace(/:/g, "");
+      s = s.replace(/-/g, "");
+      Utils.FileDownload(
+        this.uploadpath + "version/" + row.version,
+        this.appinfo.alias + "_" + s
+      );
     },
     createversion() {
       this.$prompt("请输入版本备注", "提示", {

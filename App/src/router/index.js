@@ -21,6 +21,7 @@ import AppDevInit from '@/components/AppDevInit'
 import AppModel from '@/components/AppModel'
 import PriceList from '@/components/PriceList'
 import ApiImmersion from '@/components/ApiImmersion'
+import AppTest from '@/components/AppTest'
 
 Vue.use(Router)
 
@@ -110,6 +111,11 @@ export default new Router({
           path: 'dev',
           name: 'AppDev',
           component: AppDev
+        },
+        {
+          path: 'test',
+          name: 'AppTest',
+          component: AppTest
         },
         {
           path: 'model',

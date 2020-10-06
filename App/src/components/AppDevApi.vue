@@ -128,7 +128,7 @@
                 </el-table-column>
                 <el-table-column label="是否必录">
                   <template slot-scope="scope">
-                    <el-checkbox v-model="scope.row.reqiured"></el-checkbox>
+                    <el-checkbox v-model="scope.row.required"></el-checkbox>
                   </template>
                 </el-table-column>
                 <el-table-column label="值范围">
@@ -265,6 +265,10 @@ export default {
         func: val.func,
       }).then((api) => {
         api.isrelative = api.isrelative == "true";
+        for(var item of api.input){
+          item.required=item.required=="1";
+          item.custom=item.custom=="1";
+        }
         this.api = api;
         setTimeout(() => {
           this.loading = false;
@@ -360,7 +364,7 @@ export default {
       this.api.input.push({
         key: "",
         name: "",
-        reqiured: false,
+        required: false,
         custom: true,
         valuescope: "",
         testvalue: "",
@@ -406,7 +410,7 @@ export default {
                 input.push({
                   key: "primary_id",
                   name: "数据更新主键值，为空则新增数据",
-                  reqiured: false,
+                  required: false,
                   custom: false,
                   valuescope: "整数",
                   testvalue: "",
@@ -417,7 +421,7 @@ export default {
                   input.push({
                     key: "id",
                     name: "数据主键值",
-                    reqiured: false,
+                    required: false,
                     custom: false,
                     valuescope: "整数",
                     testvalue: "",
@@ -428,7 +432,7 @@ export default {
                 input.push({
                   key: "idlist",
                   name: '数据主键值联合，例如"1,2,3,4"',
-                  reqiured: true,
+                  required: true,
                   custom: false,
                   valuescope: "字符串",
                   testvalue: "",
@@ -438,7 +442,7 @@ export default {
                 input.push({
                   key: "datajson",
                   name: "单条数据的json数组，转成字符串",
-                  reqiured: true,
+                  required: true,
                   custom: false,
                   valuescope: "json字符串",
                   testvalue: "",
@@ -451,7 +455,7 @@ export default {
                     input.push({
                       key: field.key,
                       name: field.name,
-                      reqiured: true,
+                      required: true,
                       custom: false,
                       valuescope: valuescope,
                       testvalue: "",
@@ -463,7 +467,7 @@ export default {
                       key: field.key,
                       name: field.name,
                       custom: false,
-                      reqiured: field.notnull == "1",
+                      required: field.notnull == "1",
                       valuescope: valuescope,
                       testvalue: "",
                     });
