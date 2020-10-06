@@ -42,6 +42,9 @@ export class PageHelper {
         param
       });
     }
+    page.opennew = function (path, param = {}) {
+      window.open(path);
+    }
     page.goBack = function () {
       page.$router.back(-1);
     }

@@ -20,6 +20,7 @@ import AppDev from '@/components/AppDev'
 import AppDevInit from '@/components/AppDevInit'
 import AppModel from '@/components/AppModel'
 import PriceList from '@/components/PriceList'
+import ApiImmersion from '@/components/ApiImmersion'
 
 Vue.use(Router)
 
@@ -74,6 +75,11 @@ export default new Router({
       path: '/app-create',
       name: 'AppCreate',
       component: AppCreate
+    },
+    {
+      path: '/app/:alias/apiimmersion',
+      name: 'ApiImmersion',
+      component: ApiImmersion,
     },
     {
       path: '/app/:alias',
