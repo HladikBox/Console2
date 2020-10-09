@@ -8,8 +8,8 @@ export class HttpHelper {
   static Unicode = "yyc";
   static Post(url, data) {
     var fullurl = Config.ApiUrl + url;
-    var token=window.localStorage.getItem("token");
-    return Axios.post(fullurl,HttpHelper.ParamUrlencoded(data), {
+    var token = window.localStorage.getItem("token");
+    return Axios.post(fullurl, HttpHelper.ParamUrlencoded(data), {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Sign': HttpHelper.Sign,
@@ -22,11 +22,27 @@ export class HttpHelper {
       return res.data;
     });
   }
+  static ApiTest(fullurl, data, testtoken, testtokenkey, testunicode) {
+    return Axios.post(fullurl, data, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Token': testtoken,
+        'TokenKey': testtokenkey,
+        'UNICODE': testunicode
+      }
+    }).then((res) => {
+      console.log(fullurl, data, res);
+      return res;
+    }).catch((exp) => {
+      console.log(fullurl, data, exp);
+      return exp;
+    });
+  }
 
   static ParamUrlencoded(json) {
     var arr = new Array();
     for (let i in json) {
-        arr.push(  i + "=" + encodeURIComponent(json[i]));
+      arr.push(i + "=" + encodeURIComponent(json[i]));
     }
     return arr.join("&");
   }
