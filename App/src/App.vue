@@ -402,6 +402,9 @@ div{
 .f-s{
   color:#67C23A ;
 }
+.f-warn{
+  color:#E6A23C ;
+}
 .f-d{
   color:#F56C6C ;
 }

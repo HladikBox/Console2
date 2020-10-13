@@ -269,6 +269,9 @@ export default {
           item.required=item.required=="1";
           item.custom=item.custom=="1";
         }
+        if(api.apicontent==""){
+          api.apicontent="<?php \r\n\r\n\r\n\r\n   ?>";
+        }
         this.api = api;
         setTimeout(() => {
           this.loading = false;
@@ -294,7 +297,7 @@ export default {
               codestr = codestr.replace(/&gt;/g, ">");
               codestr = codestr.replace(/&lt;/g, "<");
               codestr = codestr.replace(/{MODEL}/g, model.modelname);
-              this.api.apicontent = codestr;
+              this.api.apicontent ="<?php \r\n\r\n\r\n"+ codestr +" \r\n\r\n\r\n?>";
               this.generateInput();
               return;
             }

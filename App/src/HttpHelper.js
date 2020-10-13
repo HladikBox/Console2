@@ -31,11 +31,11 @@ export class HttpHelper {
         'UNICODE': testunicode
       }
     }).then((res) => {
-      console.log(fullurl, data, res);
+      console.log("apihttpsuccess", fullurl, data, res);
       return res;
     }).catch((exp) => {
-      console.log(fullurl, data, exp);
-      return exp;
+      console.log("apihttperror", fullurl, data, exp, exp.response);
+      return exp.response;
     });
   }
 
