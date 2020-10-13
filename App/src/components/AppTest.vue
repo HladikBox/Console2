@@ -157,7 +157,6 @@
           <div class="padding-left">
             <div class="h3">测试进度</div>
             <div class="margin-top-4x">
-
               <el-divider content-position="left">接口测试</el-divider>
               <div class="flex-row flex-center">
                 <div class="margin-right">
@@ -651,9 +650,7 @@ export default {
 
             var totalapi = 0;
             if (totaltestapicount > 0) {
-              totalapi = parseInt(
-                (havetestapicount * 100) / totaltestapicount
-              );
+              totalapi = parseInt((havetestapicount * 100) / totaltestapicount);
             }
             this.totalapi = totalapi;
 
@@ -664,16 +661,14 @@ export default {
               successapi = parseInt(
                 (succeesstestapicount * 100) / totaltestcase
               );
-              wanringapi = parseInt(
-                (warningapicount * 100) / totaltestcase
-              );
+              wanringapi = parseInt((warningapicount * 100) / totaltestcase);
               failureapi = parseInt(
                 (failuretestapicount * 100) / totaltestcase
               );
             }
-            this.successapi=successapi;
-            this.wanringapi=wanringapi;
-            this.failureapi=failureapi;
+            this.successapi = successapi;
+            this.wanringapi = wanringapi;
+            this.failureapi = failureapi;
           }
         );
       });
