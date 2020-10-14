@@ -2,6 +2,55 @@
   <div class="padding">
     <div v-if="appinfo != null">
       <el-tabs :tab-position="'left'">
+        <el-tab-pane label="测试进度">
+          <div class="padding-left">
+            <div class="h3">测试进度</div>
+            <div class="margin-top-4x">
+              <el-divider content-position="left">接口测试</el-divider>
+              <div class="flex-row flex-center">
+                <div class="margin-right">
+                  <div>
+                    <el-progress
+                      type="circle"
+                      :percentage="totalapi"
+                    ></el-progress>
+                  </div>
+                  <div class="margin-top text-center">测试进度</div>
+                </div>
+                <div class="margin-right">
+                  <div>
+                    <el-progress
+                      type="circle"
+                      :percentage="successapi"
+                      color="#5cb87a"
+                    ></el-progress>
+                  </div>
+                  <div class="margin-top text-center">成功</div>
+                </div>
+                <div class="margin-right">
+                  <div>
+                    <el-progress
+                      type="circle"
+                      :percentage="wanringapi"
+                      color="#e6a23c"
+                    ></el-progress>
+                  </div>
+                  <div class="margin-top text-center">半成功</div>
+                </div>
+                <div class="margin-right">
+                  <div>
+                    <el-progress
+                      type="circle"
+                      :percentage="failureapi"
+                      color="#f56c6c"
+                    ></el-progress>
+                  </div>
+                  <div class="margin-top text-center">失败</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </el-tab-pane>
         <el-tab-pane label="接口测试">
           <div class="padding-left">
             <div class="h3">接口测试</div>
@@ -153,65 +202,16 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="测试进度">
-          <div class="padding-left">
-            <div class="h3">测试进度</div>
-            <div class="margin-top-4x">
-              <el-divider content-position="left">接口测试</el-divider>
-              <div class="flex-row flex-center">
-                <div class="margin-right">
-                  <div>
-                    <el-progress
-                      type="circle"
-                      :percentage="totalapi"
-                    ></el-progress>
-                  </div>
-                  <div class="margin-top text-center">测试进度</div>
-                </div>
-                <div class="margin-right">
-                  <div>
-                    <el-progress
-                      type="circle"
-                      :percentage="successapi"
-                      color="#5cb87a"
-                    ></el-progress>
-                  </div>
-                  <div class="margin-top text-center">成功</div>
-                </div>
-                <div class="margin-right">
-                  <div>
-                    <el-progress
-                      type="circle"
-                      :percentage="wanringapi"
-                      color="#e6a23c"
-                    ></el-progress>
-                  </div>
-                  <div class="margin-top text-center">半成功</div>
-                </div>
-                <div class="margin-right">
-                  <div>
-                    <el-progress
-                      type="circle"
-                      :percentage="failureapi"
-                      color="#f56c6c"
-                    ></el-progress>
-                  </div>
-                  <div class="margin-top text-center">失败</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </el-tab-pane>
         <el-tab-pane label="后台测试">
           <div class="padding-left">
             <div class="h3">后台测试</div>
-            <div class="margin-top-4x"></div>
+            <div class="margin-top-4x">还没想到，大家给点意见</div>
           </div>
         </el-tab-pane>
         <el-tab-pane label="UI测试">
           <div class="padding-left">
             <div class="h3">UI测试</div>
-            <div class="margin-top-4x"></div>
+            <div class="margin-top-4x">还没想到，大家给点意见</div>
           </div>
         </el-tab-pane>
       </el-tabs>
