@@ -12,6 +12,9 @@ import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 import fullCalendar from 'vue-fullcalendar'
 import echarts from 'echarts'
+import htmlToPdf from './htmlToPdf.js'
+
+Vue.use(htmlToPdf)
 
 Vue.prototype.$echarts = echarts
 

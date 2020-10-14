@@ -22,6 +22,7 @@ import AppModel from '@/components/AppModel'
 import PriceList from '@/components/PriceList'
 import ApiImmersion from '@/components/ApiImmersion'
 import AppTest from '@/components/AppTest'
+import AppDoc from '@/components/AppDoc'
 
 Vue.use(Router)
 
@@ -116,6 +117,11 @@ export default new Router({
           path: 'test',
           name: 'AppTest',
           component: AppTest
+        },
+        {
+          path: 'doc',
+          name: 'AppDoc',
+          component: AppDoc
         },
         {
           path: 'model',

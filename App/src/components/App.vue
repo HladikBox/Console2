@@ -52,6 +52,12 @@
               <span>测试</span>
             </template>
           </el-menu-item>
+          <el-menu-item index="AppDoc"  @click="routeto('/app/'+appinfo.alias+'/doc')">
+            <template slot="title">
+              <i class="el-icon-document"></i>
+              <span>文档</span>
+            </template>
+          </el-menu-item>
           <el-menu-item index="6">
             <template slot="title">
               <i class="el-icon-upload"></i>
