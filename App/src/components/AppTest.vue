@@ -227,7 +227,7 @@
         <div class="flex-row margin-top-1x">
           <div class="width-1x">详情</div>
           <div class="flex-1">
-            <el-input v-model="test.description" type="textarea"></el-input>
+            <el-input v-model="test.summary" type="textarea"></el-input>
           </div>
         </div>
         <el-divider content-position="left">输入参数</el-divider>
