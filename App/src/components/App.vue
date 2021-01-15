@@ -28,12 +28,12 @@
               <span>总揽</span>
             </template>
           </el-menu-item>
-          <el-menu-item index="AppSchedule" @click="routeto('/app/'+appinfo.alias+'/schedule')">
+          <!-- <el-menu-item index="AppSchedule" @click="routeto('/app/'+appinfo.alias+'/schedule')">
             <template slot="title">
               <i class="el-icon-s-order"></i>
               <span>项目计划</span>
             </template>
-          </el-menu-item>
+          </el-menu-item> -->
           <el-menu-item index="AppSpec" @click="routeto('/app/'+appinfo.alias+'/spec')">
             <template slot="title">
               <i class="el-icon-document"></i>

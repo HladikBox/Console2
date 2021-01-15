@@ -99,8 +99,8 @@ export default {
 div{
 }
 .container{
-  min-width:940px;
-  max-width:940px;
+  min-width:1200px;
+  max-width:1200px;
 }
 
 .flex-row {

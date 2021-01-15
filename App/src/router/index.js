@@ -23,6 +23,7 @@ import PriceList from '@/components/PriceList'
 import ApiImmersion from '@/components/ApiImmersion'
 import AppTest from '@/components/AppTest'
 import AppDoc from '@/components/AppDoc'
+import Market from '@/components/Market'
 
 Vue.use(Router)
 
@@ -42,6 +43,11 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/market',
+      name: 'Market',
+      component: Market
     },
     {
       path: '/pricelist',
